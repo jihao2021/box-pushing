@@ -8,7 +8,7 @@ import os
 
 # os.environ["SDL_VIDEODRIVER"] = "dummy"
 import pygame
-from env.pygame_env import CustomEnv
+from scripts.pygame_env import CustomEnv
 import argparse
 import pygame as pg
 import matplotlib.pyplot as plt
@@ -18,14 +18,14 @@ import csv
 import os
 import os.path
 # from mpl_toolkits.mplot3d import Axes3D
-from env import constant
+from scripts import constant
 import time
 
-from env.DQN_modified_plus_simplified import DeepQNetwork
-from env.Boxer import Boxer
+from scripts.DQN_modified_plus_simplified import DeepQNetwork
+from scripts.Boxer import Boxer
 
 # num_episodes = 5000
-num_episodes = 1
+num_episodes = 5000
 max_epLength = 500
 
 NUMBER_OF_AGENT = 10
