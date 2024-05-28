@@ -1,19 +1,20 @@
 import os
 os.environ["SDL_VIDEODRIVER"] = "dummy"
-from pygame_env import CustomEnv
+from .pygame_env import CustomEnv
 import argparse
 import pygame as pg
-from DQN_modified_plus_simplified import DeepQNetwork
 import matplotlib.pyplot as plt
 import numpy as np
 import tensorflow as tf
-from Boxer import Boxer
 import csv
 import os
 import os.path
 #from mpl_toolkits.mplot3d import Axes3D
 import constant
 import time
+
+from DQN_modified_plus_simplified import DeepQNetwork
+from Boxer import Boxer
 
 
 #num_episodes = 5000
