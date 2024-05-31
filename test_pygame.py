@@ -1,5 +1,5 @@
-from env.pygame_env import CustomEnv
-from env.DQN_modified_plus_simplified import DeepQNetwork
+from scripts.pygame_env import CustomEnv
+from scripts.DQN_modified_plus_simplified import DeepQNetwork
 
 def main():
     env = CustomEnv(random_initialization=False, n_agents=2)

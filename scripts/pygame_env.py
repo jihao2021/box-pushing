@@ -324,6 +324,7 @@ class CustomEnv(gym.Env):
     def step(self, action, Boxer_name):
         box1 = self.object_boxes[0]
 
+        # Can simulate up to 10 agents?
         for i in range(self.n_agents):
             for key, value in action.items():
                 '''Check if the last letter is the same or not'''

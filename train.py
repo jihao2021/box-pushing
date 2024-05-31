@@ -203,12 +203,12 @@ if __name__ == "__main__":
         NUMBER_OF_AGNET_TRAINED_MODEL = args.number_agent_trained_model
         random_seed_trained_model = args.random_seed_trained_model
         np.random.seed(random_seed)
-        tf.set_random_seed(random_seed)
+        tf.random.set_seed(random_seed)
     elif input_ == 'pycharm':
         NUMBER_OF_AGENT = 5
         random_seed = 5
         np.random.seed(random_seed)
-    #         tf.set_random_seed(random_seed)
+        tf.random.set_seed(random_seed)
 
     # NUMBER_OF_AGENT = 4
     print("number of agent is:", NUMBER_OF_AGENT)
@@ -232,8 +232,10 @@ if __name__ == "__main__":
     for i in range(NUMBER_OF_AGENT):
         Boxer_list.append(RL.Boxer[i])
 
+    print("action: ", RL.choose_action(env.reset()))
+    print("boxer name: ", RL.Boxer_name)
 
-    run_game()
+    # run_game()
     end = time.time()
 
 

@@ -119,7 +119,6 @@ class Boxer():
                 self.loading_others_higher(others_number=self.n_agents_trained_model,
                                            others_random_seed=self.random_seed_trained_model)
             elif self.number_agent > self.n_agents_trained_model:
-                
                 self.loading_others_lower(others_number=self.n_agents_trained_model, 
                                       others_random_seed=self.random_seed_trained_model)
             elif self.number_agent == self.n_agents_trained_model:
