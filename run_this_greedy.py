@@ -266,7 +266,7 @@ if __name__== "__main__":
     for i in range(NUMBER_OF_AGENT):
         Boxer_list.append(RL.Boxer[i])
 
-    RL.loading_parameters()
+    RL.loading_parameters(NUMBER_OF_AGENT_TRAINED_MODEL, random_seed)
 
     run_game_greedy()
     end = time.time()
