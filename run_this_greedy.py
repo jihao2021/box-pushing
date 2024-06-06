@@ -1,21 +1,21 @@
 #import os
 #os.environ["SDL_VIDEODRIVER"] = "dummy"
-from pygame_env import CustomEnv
+from scripts.pygame_env import CustomEnv
 import argparse
 import pygame as pg
-from DQN_modified_plus_simplified import DeepQNetwork
+from scripts.DQN_modified_plus_simplified import DeepQNetwork
 import matplotlib.pyplot as plt
 import numpy as np
 import tensorflow as tf
-from Boxer import Boxer
+from scripts.Boxer import Boxer
 import csv
 import os
 import os.path
 #from mpl_toolkits.mplot3d import Axes3D
-import constant
+from scripts import constant
 import time
 
-num_episodes = 8000
+num_episodes = 5000
 max_epLength = 200
 
 def run_game_greedy():
@@ -221,19 +221,19 @@ def run_game_greedy():
 
 if __name__== "__main__":
     start = time.time()
-    loading_model = True
+    loading_model = False
     '''
     random_seed is dumpy input as it is greedy algorithm, no random is involved
     number_agent_trained_model and random_seed_trained_model is necessary for run_game_greedy
     '''
     parser = argparse.ArgumentParser()
-    parser.add_argument('-number_agent', type=int, default=3,
+    parser.add_argument('-number_agent', type=int, default=5,
                     help='choose number of agents')
-    parser.add_argument('-random_seed', type=int, default=1,
+    parser.add_argument('-random_seed', type=int, default=5,
                     help='choose the random seed number')
-    parser.add_argument('-number_agent_trained_model', type=int, default=1,
-                    help='choose the number of agnet of trained model')
-    parser.add_argument('-random_seed_trained_model', type=int, default=1,
+    parser.add_argument('-number_agent_trained_model', type=int, default=5,
+                    help='choose the number of agent of trained model')
+    parser.add_argument('-random_seed_trained_model', type=int, default=5,
                     help='choose the random seed number associated with trained models')
     args = parser.parse_args()
     print('=' * 50)
@@ -244,7 +244,7 @@ if __name__== "__main__":
     NUMBER_OF_AGENT_TRAINED_MODEL = args.number_agent_trained_model
     random_seed_trained_model = args.random_seed_trained_model
     np.random.seed(random_seed)
-    tf.set_random_seed(random_seed)
+    tf.random.set_seed(random_seed)
     
     print("number of agent is:", NUMBER_OF_AGENT)
     env = CustomEnv(random_initialization=False, n_agents=NUMBER_OF_AGENT)
@@ -265,6 +265,9 @@ if __name__== "__main__":
     Boxer_list =[]
     for i in range(NUMBER_OF_AGENT):
         Boxer_list.append(RL.Boxer[i])
+
+    RL.loading_parameters(NUMBER_OF_AGENT_TRAINED_MODEL, random_seed)
+
     run_game_greedy()
     end = time.time()
     print('total time is: {} seconds'.format(str(end-start)))
