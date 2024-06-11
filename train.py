@@ -235,11 +235,11 @@ if __name__ == "__main__":
     print("action: ", RL.choose_action(env.reset()))
     print("boxer name: ", RL.Boxer_name)
 
-    # run_game()
+    run_game()
     end = time.time()
 
 
-    # RL.save_models()
+    RL.save_models()
     # print('total time of this simulation case is:  ', end - start)
     print('total time is: {} seconds'.format(str(end - start)))
 
