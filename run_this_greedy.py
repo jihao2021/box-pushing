@@ -31,7 +31,7 @@ def run_game_greedy():
 
 
 
-    
+
 
     for episode in range(1):
         observation = env.reset()
@@ -90,8 +90,8 @@ def run_game_greedy():
             Number_of_5 = action_list.count(5)  #region 6 six-hit
             Sum = Number_of_0 + Number_of_1 + Number_of_2 + Number_of_3 + Number_of_4 + Number_of_5
             rotation = Number_of_0 + Number_of_2 - Number_of_1 - Number_of_3
-            #change_x = (self.three_hit + self.four_hit - self.one_hit - self.two_hit) 
-            #change_y = (self.five_hit - self.six_hit) 
+            #change_x = (self.three_hit + self.four_hit - self.one_hit - self.two_hit)
+            #change_y = (self.five_hit - self.six_hit)
             change_x = Number_of_2 + Number_of_3 - Number_of_0 - Number_of_1
             change_y = Number_of_4 - Number_of_5
             #print(rotation)
@@ -104,7 +104,7 @@ def run_game_greedy():
 
             observation_, reward, done, _ = env.step(action, RL.Boxer_name)
 
-            
+
 
             for i in range(NUMBER_OF_AGENT):
                 episode_reward[i] += reward[RL.Boxer_name[i]]
@@ -133,21 +133,21 @@ def run_game_greedy():
                 break
         print("episode is :", episode)
 
-    
+
 
     output_path_screenshot = "./NUM_AGENT" + str(NUMBER_OF_AGENT_TRAINED_MODEL).zfill(2) + "/" + str(random_seed_trained_model).zfill(4) + '/screenshot'
     if not os.path.exists(output_path_screenshot):
         os.makedirs(output_path_screenshot)
-        
+
     pg.image.save(env.screen, output_path_screenshot + "/screenshot" + str(random_seed_trained_model).zfill(4) + ".jpg")
     print('game is over')
 
-    
+
     output_path_greedy_output = "./NUM_AGENT" + str(NUMBER_OF_AGENT_TRAINED_MODEL).zfill(2) + "/" + str(random_seed_trained_model).zfill(4) + '/greedy_output'
     if not os.path.exists(output_path_greedy_output):
         os.makedirs(output_path_greedy_output)
 
-    with open(os.path.join(output_path_greedy_output, 
+    with open(os.path.join(output_path_greedy_output,
                            'check_success'+
                            '-NUM_AGENT'+
                            str(NUMBER_OF_AGENT).zfill(2)+
@@ -163,7 +163,7 @@ def run_game_greedy():
         #wr.writerow([])
         data_dump.close()
 
-    with open(os.path.join(output_path_greedy_output, 
+    with open(os.path.join(output_path_greedy_output,
                                'check_trajectory'+
                                '-NUM_AGENT'+
                                str(NUMBER_OF_AGENT).zfill(2)+
@@ -180,7 +180,7 @@ def run_game_greedy():
         #wr.writerow([])
         data_dump.close()
 
-    with open(os.path.join(output_path_greedy_output, 
+    with open(os.path.join(output_path_greedy_output,
                                'check_position_heading'+
                                '-NUM_AGENT'+
                                str(NUMBER_OF_AGENT).zfill(2)+
@@ -245,10 +245,10 @@ if __name__== "__main__":
     random_seed_trained_model = args.random_seed_trained_model
     np.random.seed(random_seed)
     tf.random.set_seed(random_seed)
-    
+
     print("number of agent is:", NUMBER_OF_AGENT)
     env = CustomEnv(random_initialization=False, n_agents=NUMBER_OF_AGENT)
-    
+
     RL = DeepQNetwork(n_agents=NUMBER_OF_AGENT,
                       n_actions=env.action_space.n,
                       n_features=env.observation_space.shape[0],
@@ -266,7 +266,7 @@ if __name__== "__main__":
     for i in range(NUMBER_OF_AGENT):
         Boxer_list.append(RL.Boxer[i])
 
-    RL.loading_parameters(NUMBER_OF_AGENT_TRAINED_MODEL, random_seed)
+    RL.loading_parameters(random_seed_trained_model, NUMBER_OF_AGENT_TRAINED_MODEL, random_seed)
 
     run_game_greedy()
     end = time.time()

@@ -4,7 +4,8 @@
 import itertools
 
 args = {"-number_agent": [5],
-	"-random_seed": list(range(50, 100)),}
+		"-random_seed": list(range(50, 100)),
+		}
 python_file = "train.py"
 
 keys, values = zip(*args.items())
