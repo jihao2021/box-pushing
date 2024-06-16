@@ -25,7 +25,7 @@ from scripts.DQN_modified_plus_simplified import DeepQNetwork
 from scripts.Boxer import Boxer
 
 # num_episodes = 5000
-num_episodes = 5000
+num_episodes = 8000
 max_epLength = 500
 
 NUMBER_OF_AGENT = 10
@@ -109,7 +109,7 @@ def run_game():
 
     print('game is all finished, fight on!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
 
-    RL.save_models()
+    RL.save_models(train_seed=random_seed)
 
     '''
     resized_list_reward = []
@@ -183,7 +183,7 @@ if __name__ == "__main__":
 
     '''
     # input = 'pycharm'
-    input_ = 'pycharm'
+    input_ = 'shell'
     if input_ == 'shell':
         parser = argparse.ArgumentParser()
         parser.add_argument('-number_agent', type=int, default=3,
@@ -239,7 +239,7 @@ if __name__ == "__main__":
     end = time.time()
 
 
-    RL.save_models()
+    # RL.save_models(train_seed=random_seed)
     # print('total time of this simulation case is:  ', end - start)
     print('total time is: {} seconds'.format(str(end - start)))
 
