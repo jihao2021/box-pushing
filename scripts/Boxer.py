@@ -107,7 +107,8 @@ class Boxer():
         if self.load_model == True:
             pass
         else:
-            print('Error in initializing parameters in Boxer')
+            pass
+            # print('Error in initializing parameters in Boxer')
             
         self.cost_his = []
 

@@ -262,7 +262,7 @@ if __name__== "__main__":
                       random_seed_trained_model=random_seed_trained_model,
                       number_episode=num_episodes
                       )
-    Boxer_list =[]
+    Boxer_list = []
     for i in range(NUMBER_OF_AGENT):
         Boxer_list.append(RL.Boxer[i])
 

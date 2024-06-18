@@ -112,7 +112,7 @@ class CustomEnv(gym.Env):
         """reset the environment"""
         _ = self.reset()
 
-    def reset(self):
+    def reset(self, manual_set=None):
         '''reset boxes and pushers to void'''
         self.object_boxes = []
         self.object_pushers = []
@@ -128,9 +128,15 @@ class CustomEnv(gym.Env):
         '''
 
         if self.random_initialization:
+            print("Random initial position")
             box1 = Box(initial_x=random.randint(60, 181), initial_y=random.randint(120, 361), width=constant.box_width,
                        height=constant.box_height)
+        elif not manual_set is None:
+            print("Manually setting initial Box position")
+            box1 = Box(initial_x=manual_set["initial_x"], initial_y=manual_set["initial_y"], width=constant.box_width,
+                       height=constant.box_height, initial_heading=manual_set["initial_heading"])
         else:
+            print("Fixed initial position")
             box1 = Box(initial_x=120, initial_y=240, width=constant.box_width, height=constant.box_height)
 
         # box1.draw_polygon(self.screen)

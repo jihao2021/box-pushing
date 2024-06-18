@@ -9,14 +9,18 @@ from .coordinate_tranformation import local_to_global_transform, global_to_local
 
 """Define Class Box:"""
 class Box():
-    def __init__(self, initial_x, initial_y,  width, height):
+    def __init__(self, initial_x, initial_y,  width, height, initial_heading=0):
         self.width = width
         self.height = height
         self.initial_position_vector = pg.math.Vector2(initial_x,initial_y)
         self.position_vector = pg.math.Vector2(initial_x, initial_y)
         self.velocity_vector = pg.math.Vector2(0,0)
-        self.heading_vector = pg.math.Vector2(1,0)
+
+        self.heading_vector = pg.math.Vector2(np.cos(initial_heading), np.sin(initial_heading))
         _, self.current_heading = self.heading_vector.as_polar()
+
+        # self.heading_vector = pg.math.Vector2(1,0)
+        # _, self.current_heading = self.heading_vector.as_polar()
 
         self.one_hit = 0   ##right-top corner hit
         self.two_hit = 0   ##right-down corner hit
