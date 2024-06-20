@@ -25,7 +25,7 @@ from scripts.DQN_modified_plus_simplified import DeepQNetwork
 from scripts.Boxer import Boxer
 
 # num_episodes = 5000
-num_episodes = 8000
+num_episodes = 5000
 max_epLength = 500
 
 NUMBER_OF_AGENT = 10
@@ -129,12 +129,12 @@ def run_game():
     # if not os.path.exists(output_path):
     #    os.makedirs(output_path)
 
-    output_path_reward = "./NUM_AGENT" + str(NUMBER_OF_AGENT).zfill(2) + "/" + str(random_seed).zfill(
+    output_path_reward = "./NUM_AGENT" + str(NUMBER_OF_AGENT).zfill(2) + f"{model_name}/" + str(random_seed).zfill(
         4) + '/reward_output'
     if not os.path.exists(output_path_reward):
         os.makedirs(output_path_reward)
 
-    output_path_distance = "./NUM_AGENT" + str(NUMBER_OF_AGENT).zfill(2) + "/" + str(random_seed).zfill(
+    output_path_distance = "./NUM_AGENT" + str(NUMBER_OF_AGENT).zfill(2) + f"{model_name}/" + str(random_seed).zfill(
         4) + '/distance_output'
     if not os.path.exists(output_path_distance):
         os.makedirs(output_path_distance)
@@ -183,7 +183,7 @@ if __name__ == "__main__":
 
     '''
     # input = 'pycharm'
-    input_ = 'shell'
+    input_ = 'pycharm'
     if input_ == 'shell':
         parser = argparse.ArgumentParser()
         parser.add_argument('-number_agent', type=int, default=3,
@@ -209,14 +209,14 @@ if __name__ == "__main__":
         tf.random.set_seed(random_seed)
     elif input_ == 'pycharm':
         NUMBER_OF_AGENT = 5
-        random_seed = 5
-        model_name = ""
+        random_seed = 500
+        model_name = "target135d"
         np.random.seed(random_seed)
         tf.random.set_seed(random_seed)
 
     # NUMBER_OF_AGENT = 4
     print("number of agent is:", NUMBER_OF_AGENT)
-    env = CustomEnv(random_initialization=False, n_agents=NUMBER_OF_AGENT)
+    env = CustomEnv(random_initialization=False, n_agents=NUMBER_OF_AGENT, target_heading=135)
 
     RL = DeepQNetwork(n_agents=NUMBER_OF_AGENT,
                       n_actions=env.action_space.n,
