@@ -235,13 +235,16 @@ if __name__== "__main__":
                     help='choose the number of agent of trained model')
     parser.add_argument('-random_seed_trained_model', type=int, default=5,
                     help='choose the random seed number associated with trained models')
-    args = parser.parse_args()
+    parser.add_argument('-model_name', type=str, default="",
+                        help='name of the model')
+    args = parser.parse_args("")
     print('=' * 50)
     print(args)
     print('=' * 50)
     NUMBER_OF_AGENT = args.number_agent
     random_seed=args.random_seed
     NUMBER_OF_AGENT_TRAINED_MODEL = args.number_agent_trained_model
+    model_name = args.model_name
     random_seed_trained_model = args.random_seed_trained_model
     np.random.seed(random_seed)
     tf.random.set_seed(random_seed)
@@ -260,7 +263,8 @@ if __name__== "__main__":
                       random_seed=random_seed,
                       n_agents_trained_model=NUMBER_OF_AGENT_TRAINED_MODEL,
                       random_seed_trained_model=random_seed_trained_model,
-                      number_episode=num_episodes
+                      number_episode=num_episodes,
+                      model_name=model_name
                       )
     Boxer_list = []
     for i in range(NUMBER_OF_AGENT):
