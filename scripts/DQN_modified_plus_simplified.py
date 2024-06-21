@@ -64,15 +64,17 @@ class DeepQNetwork:
             os.makedirs(parent_dir)
         # Save the weights
         for i in range(self.n_agents):
-            self.Boxer[i].eval_net.save_weights(f"models/job{self.n_agents}/{train_seed}/model-{self.num_episodes}Boxer{i}-eval.h5")
+            self.Boxer[i].eval_net.save_weights(
+                f"models/job{self.n_agents}{self.model_name}/{train_seed}/model-{self.num_episodes}Boxer{i}-eval.h5")
             self.Boxer[i].target_net.save_weights(
-                f"models/job{self.n_agents}/{train_seed}/model-{self.num_episodes}Boxer{i}-target.h5")
+                f"models/job{self.n_agents}{self.model_name}/{train_seed}/model-{self.num_episodes}Boxer{i}-target.h5")
 
     def loading_parameters(self, train_seed, num_trained, random_seed):
         if num_trained == self.n_agents:  # same number of agents
             print(f"loading exact {num_trained} trained models")
             for i in range(self.n_agents):
-                self.Boxer[i].eval_net.load_weights(f"models/job{self.n_agents}{self.model_name}/{train_seed}/model-{self.num_episodes}Boxer{i}-eval.h5")
+                self.Boxer[i].eval_net.load_weights(
+                    f"models/job{self.n_agents}{self.model_name}/{train_seed}/model-{self.num_episodes}Boxer{i}-eval.h5")
                 self.Boxer[i].target_net.load_weights(
                     f"models/job{self.n_agents}{self.model_name}/{train_seed}/model-{self.num_episodes}Boxer{i}-target.h5")
 

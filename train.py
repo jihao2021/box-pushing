@@ -25,7 +25,7 @@ from scripts.DQN_modified_plus_simplified import DeepQNetwork
 from scripts.Boxer import Boxer
 
 # num_episodes = 5000
-num_episodes = 5000
+num_episodes = 6000
 max_epLength = 500
 
 NUMBER_OF_AGENT = 10
@@ -183,7 +183,7 @@ if __name__ == "__main__":
 
     '''
     # input = 'pycharm'
-    input_ = 'pycharm'
+    input_ = 'shell'
     if input_ == 'shell':
         parser = argparse.ArgumentParser()
         parser.add_argument('-number_agent', type=int, default=3,

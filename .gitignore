@@ -1,0 +1,2 @@
+# ignore all slurm*.out
+slurm*.out
