@@ -15,7 +15,7 @@ import os.path
 from scripts import constant
 import time
 
-num_episodes = 8000
+num_episodes = 6000
 max_epLength = 200
 
 def run_game_greedy():
@@ -134,8 +134,7 @@ def run_game_greedy():
         print("episode is :", episode)
 
 
-
-    output_path_screenshot = "./NUM_AGENT" + str(NUMBER_OF_AGENT_TRAINED_MODEL).zfill(2) + "/" + str(random_seed_trained_model).zfill(4) + '/screenshot'
+    output_path_screenshot = "./NUM_AGENT" + str(NUMBER_OF_AGENT_TRAINED_MODEL).zfill(2) + f"{model_name}/" + str(random_seed_trained_model).zfill(4) + '/screenshot'
     if not os.path.exists(output_path_screenshot):
         os.makedirs(output_path_screenshot)
 
@@ -143,7 +142,7 @@ def run_game_greedy():
     print('game is over')
 
 
-    output_path_greedy_output = "./NUM_AGENT" + str(NUMBER_OF_AGENT_TRAINED_MODEL).zfill(2) + "/" + str(random_seed_trained_model).zfill(4) + '/greedy_output'
+    output_path_greedy_output = "./NUM_AGENT" + str(NUMBER_OF_AGENT_TRAINED_MODEL).zfill(2) + f"{model_name}/" + str(random_seed_trained_model).zfill(4) + '/greedy_output'
     if not os.path.exists(output_path_greedy_output):
         os.makedirs(output_path_greedy_output)
 
@@ -237,7 +236,7 @@ if __name__== "__main__":
                     help='choose the random seed number associated with trained models')
     parser.add_argument('-model_name', type=str, default="",
                         help='name of the model')
-    args = parser.parse_args("")
+    args = parser.parse_args()
     print('=' * 50)
     print(args)
     print('=' * 50)
