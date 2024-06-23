@@ -287,7 +287,7 @@ class CustomEnv(gym.Env):
                 break
 
         if self.reach_goal:
-            reward_goal = 900
+            reward_goal = 1  #900
             print("reach_goal_reward_get")
         else:
             # reward_goal = -1
@@ -312,7 +312,7 @@ class CustomEnv(gym.Env):
             if self.collision:
                 break
         if self.collision:
-            reward_obstacle = -900
+            reward_obstacle = -1 #-900
             # pygame.image.save(self.screen, "screenshot.jpg")
         else:
             reward_obstacle = 0

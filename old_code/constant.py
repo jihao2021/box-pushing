@@ -38,7 +38,7 @@ box_height = 150
 #box_width = 90
 #box_height = 225
 
-distance_coefficient = 2.5
+distance_coefficient = 1
 
 reward_efficiency = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
 

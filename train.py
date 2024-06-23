@@ -25,11 +25,11 @@ from scripts.DQN_modified_plus_simplified import DeepQNetwork
 from scripts.Boxer import Boxer
 
 # num_episodes = 5000
-num_episodes = 5000
+num_episodes = 500
 max_epLength = 500
 
-NUMBER_OF_AGENT = 10
-NUMBER_OF_AGNET_TRAINED_MODEL = 0
+NUMBER_OF_AGENT = 5
+NUMBER_OF_AGNET_TRAINED_MODEL = 5
 
 
 # In[44]:
@@ -186,13 +186,13 @@ if __name__ == "__main__":
     input_ = 'pycharm'
     if input_ == 'shell':
         parser = argparse.ArgumentParser()
-        parser.add_argument('-number_agent', type=int, default=3,
+        parser.add_argument('-number_agent', type=int, default=5,
                             help='choose number of agents')
-        parser.add_argument('-random_seed', type=int, default=1,
+        parser.add_argument('-random_seed', type=int, default=5,
                             help='choose the random seed number')
-        parser.add_argument('-number_agent_trained_model', type=int, default=1,
+        parser.add_argument('-number_agent_trained_model', type=int, default=5,
                             help='choose the number of agnet of trained model')
-        parser.add_argument('-random_seed_trained_model', type=int, default=1,
+        parser.add_argument('-random_seed_trained_model', type=int, default=5,
                             help='choose the random seed number associated with trained models')
         args = parser.parse_args()
         print('=' * 50)
@@ -235,11 +235,10 @@ if __name__ == "__main__":
     print("action: ", RL.choose_action(env.reset()))
     print("boxer name: ", RL.Boxer_name)
 
-    # run_game()
+    run_game()
     end = time.time()
 
-
-    # RL.save_models()
+    RL.save_models()
     # print('total time of this simulation case is:  ', end - start)
     print('total time is: {} seconds'.format(str(end - start)))
 
