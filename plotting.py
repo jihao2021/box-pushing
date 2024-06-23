@@ -21,7 +21,7 @@ train_seed = 0
 # In[17]:
 
 
-model_name = "target135d"
+model_name = "target225d"
 
 
 # In[18]:
@@ -63,7 +63,7 @@ pygame.quit()
 count_success = 0
 count_up = 0
 count_low = 0
-total_num = 98
+total_num = 100
 
 for train_seed in range(total_num):
     folder = f"NUM_AGENT{str(num_agent).zfill(2)}{model_name}/{str(train_seed).zfill(4)}/"
