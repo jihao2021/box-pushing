@@ -25,7 +25,7 @@ from scripts.DQN_modified_plus_simplified import DeepQNetwork
 from scripts.Boxer import Boxer
 
 # num_episodes = 5000
-num_episodes = 5000
+num_episodes = 8000
 max_epLength = 500
 
 NUMBER_OF_AGENT = 10
