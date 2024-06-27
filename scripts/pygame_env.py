@@ -298,7 +298,7 @@ class CustomEnv(gym.Env):
             if not self.target_heading is None:
                 delta_angle = np.mod(self.target_heading-self.object_boxes[0].current_heading, 360)
                 # reward_goal *= np.abs(np.cos(delta_angle/180*np.pi))
-                reward_goal *= np.exp(-0.5*np.abs(delta_angle)/180*np.pi)
+                # reward_goal *= np.exp(-0.5*np.abs(delta_angle)/180*np.pi)
             print(f"reach_goal_reward_get: {reward_goal}")
         else:
             # reward_goal = -1

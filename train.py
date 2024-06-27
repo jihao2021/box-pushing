@@ -216,7 +216,7 @@ if __name__ == "__main__":
 
     # NUMBER_OF_AGENT = 4
     print("number of agent is:", NUMBER_OF_AGENT)
-    env = CustomEnv(random_initialization=False, n_agents=NUMBER_OF_AGENT, target_heading=225)
+    env = CustomEnv(random_initialization=True, n_agents=NUMBER_OF_AGENT, target_heading=None)
 
     RL = DeepQNetwork(n_agents=NUMBER_OF_AGENT,
                       n_actions=env.action_space.n,
