@@ -5,7 +5,7 @@ import itertools
 
 args = {"-number_agent": [5],
 	"-random_seed": list(range(0, 100)),
-	"-model_name": ["randomInit"]
+	"-model_name": ["random225d"]
 	}
 python_file = "train.py"
 
