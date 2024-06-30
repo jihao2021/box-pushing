@@ -7,7 +7,7 @@ args = {"-number_agent": [5],
 	"-random_seed": [0],
 	"-number_agent_trained_model": [5],
 	"-random_seed_trained_model": list(range(0, 100)),
-	"-model_name": ["randomInit"]}
+	"-model_name": ["random225d"]}
 python_file = "run_this_greedy.py"
 
 keys, values = zip(*args.items())
