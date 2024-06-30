@@ -292,6 +292,25 @@ class Box():
         self.previous_distance = self.current_distance
         return reward_distance
 
+
+    def check_distance_reward_with_angle(self, env):
+        target1 = env.object_targets[0]
+        target_angle = env.target_heading
+        heading_diff = abs(self.current_heading - target_angle)
+        heading_diff = min(heading_diff, 360-heading_diff)
+        if self.previous_distance == -100:
+            self.previous_distance = math.hypot(self.initial_position_vector.x - target1.x,
+                                                self.initial_position_vector.y - target1.y,
+                                                heading_diff)
+        else:
+            pass
+
+        self.current_distance = math.hypot(self.position_vector.x - target1.x, self.position_vector.y - target1.y, heading_diff)
+        change_distance = self.previous_distance - self.current_distance
+        reward_distance = change_distance * constant.distance_coefficient
+        self.previous_distance = self.current_distance
+        return reward_distance
+
     def check_rotation_reward(self):
         change_angle = self.change_angle
         reward_rotation = math.cos(math.radians(change_angle)) - 0.98

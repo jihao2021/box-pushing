@@ -258,7 +258,8 @@ class CustomEnv(gym.Env):
 
         '''Check rotation reward and distance reward'''
         reward_rotation = box1.check_rotation_reward()
-        reward_distance = box1.check_distance_reward(self)
+        # reward_distance = box1.check_distance_reward(self)
+        reward_distance = box1.check_distance_reward_with_angle(self)
 
         '''Add rewrad together first part of reward'''
         reward = []
