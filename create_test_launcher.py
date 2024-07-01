@@ -3,11 +3,11 @@
 
 import itertools
 
-args = {"-number_agent": [5],
+args = {"-number_agent": [6],
 	"-random_seed": [0],
-	"-number_agent_trained_model": [5],
+	"-number_agent_trained_model": [6],
 	"-random_seed_trained_model": list(range(0, 100)),
-	"-model_name": ["random225d"]}
+	"-model_name": ["headReward"]}
 python_file = "run_this_greedy.py"
 
 keys, values = zip(*args.items())

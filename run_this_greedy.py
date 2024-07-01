@@ -249,7 +249,7 @@ if __name__== "__main__":
     tf.random.set_seed(random_seed)
 
     print("number of agent is:", NUMBER_OF_AGENT)
-    env = CustomEnv(random_initialization=False, n_agents=NUMBER_OF_AGENT)
+    env = CustomEnv(random_initialization=False, n_agents=NUMBER_OF_AGENT, target_heading=225)
 
     RL = DeepQNetwork(n_agents=NUMBER_OF_AGENT,
                       n_actions=env.action_space.n,
