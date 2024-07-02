@@ -18,7 +18,7 @@ import time
 
 random.seed(constant.random_seed)
 
-N_DISCRETE_ACTIONS = 6
+N_DISCRETE_ACTIONS = 7
 
 
 class CustomEnv(gym.Env):

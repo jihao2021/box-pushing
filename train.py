@@ -24,6 +24,15 @@ import time
 from scripts.DQN_modified_plus_simplified import DeepQNetwork
 from scripts.Boxer import Boxer
 
+import matplotlib.pyplot as plt
+
+SHOW_ACTION = False  # for debug purpose
+
+if SHOW_ACTION:
+    fig = plt.figure()
+    # plt.show()
+    plt.pause(0.1)
+
 # num_episodes = 5000
 num_episodes = 6000
 max_epLength = 500
@@ -63,6 +72,13 @@ def run_game():
             """RL choose action based on observation"""
 
             action = RL.choose_action(observation)
+
+            if SHOW_ACTION:
+                plt.cla()
+                plt.hist(list(action.values()), bins=[i-0.5 for i in range(8)], range=(0, 7))
+                plt.ylim([0, NUMBER_OF_AGENT])
+                plt.draw()
+
 
             """Take action and get next observation and reward"""
 
