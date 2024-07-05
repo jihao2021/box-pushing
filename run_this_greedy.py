@@ -15,7 +15,7 @@ import os.path
 from scripts import constant
 import time
 
-num_episodes = 5000
+num_episodes = 5
 max_epLength = 200
 
 def run_game_greedy():

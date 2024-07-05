@@ -24,7 +24,7 @@ N_DISCRETE_ACTIONS = 6
 class CustomEnv(gym.Env):
     metadata = {"render_modes": ["human", "rgb_array"], "render_fps": 4}
 
-    def __init__(self, random_initialization, n_agents):
+    def __init__(self, random_initialization, n_agents, params = {}):
         super(CustomEnv, self).__init__()
 
         '''Define action and observation space, They must be gym.space objects'''
@@ -56,7 +56,7 @@ class CustomEnv(gym.Env):
         self.reach_goal = False
         self.done = False
 
-        self.reward_rotation = True
+        self.reward_rotation = params.get('reward_rotation',True)
 
         self.object_boxes = []
         self.object_obstacles = []
@@ -71,22 +71,29 @@ class CustomEnv(gym.Env):
         '''w1 * reward_goal + w2 * reward_obstacle + w3 * reward_rotation + 
                               w4 * reward_distance + w5 * reward_efficiency'''
         # self.w1 = 0.6
-        self.w1 = 0.6 * 1.0
-        # self.w1 = 0.6 * 0.5
+        self.w1 = params.get('w1',0.6)
+        self.w2 = params.get('w2',0.1)
+        self.w3 = params.get('w3',0.1)
+        self.w4 = params.get('w4',0.2)
+        self.w5 = params.get('w5',0)
+        self.w6 = params.get('w6',0)
 
-        self.w2 = 0.1
-        self.w3 = 0.1
-        self.w4 = 0.2
-        self.w5 = 0
-        self.w6 = 0
-        if self.reward_rotation == False:
-            '''Sum equal to 0.9'''
-            self.w1 = 0.6
-            self.w2 = 0.1
-            self.w3 = 0.0
-            self.w4 = 0.2
-            self.w5 = 0
-            self.w6 = 0
+        # self.w1 = 0.6 * 1.0
+        # # self.w1 = 0.6 * 0.5
+        #
+        # self.w2 = 0.1
+        # self.w3 = 0.1
+        # self.w4 = 0.2
+        # self.w5 = 0
+        # self.w6 = 0
+        # if self.reward_rotation == False:
+        #     '''Sum equal to 0.9'''
+        #     self.w1 = 0.6
+        #     self.w2 = 0.1
+        #     self.w3 = 0.0
+        #     self.w4 = 0.2
+        #     self.w5 = 0
+        #     self.w6 = 0
 
         """
         Create static objects such as target, obstacle and patches

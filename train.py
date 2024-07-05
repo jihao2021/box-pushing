@@ -25,8 +25,8 @@ from scripts.DQN_modified_plus_simplified import DeepQNetwork
 from scripts.Boxer import Boxer
 
 # num_episodes = 5000
-num_episodes = 500
-max_epLength = 500
+num_episodes = 5
+max_epLength = 5
 
 NUMBER_OF_AGENT = 5
 NUMBER_OF_AGNET_TRAINED_MODEL = 5
@@ -35,7 +35,7 @@ NUMBER_OF_AGNET_TRAINED_MODEL = 5
 # In[44]:
 
 
-def run_game():
+def run_game(params_id='test'):
     reward_list = [[] for _ in range(NUMBER_OF_AGENT)]
     RL.step = 0
     for i in range(NUMBER_OF_AGENT):
@@ -130,12 +130,12 @@ def run_game():
     #    os.makedirs(output_path)
 
     output_path_reward = "./NUM_AGENT" + str(NUMBER_OF_AGENT).zfill(2) + "/" + str(random_seed).zfill(
-        4) + '/reward_output'
+        4) + '/reward_output' + '/' + params_id
     if not os.path.exists(output_path_reward):
         os.makedirs(output_path_reward)
 
     output_path_distance = "./NUM_AGENT" + str(NUMBER_OF_AGENT).zfill(2) + "/" + str(random_seed).zfill(
-        4) + '/distance_output'
+        4) + '/distance_output' '/' + params_id
     if not os.path.exists(output_path_distance):
         os.makedirs(output_path_distance)
 
@@ -183,50 +183,78 @@ if __name__ == "__main__":
 
     '''
     # input = 'pycharm'
-    input_ = 'pycharm'
-    if input_ == 'shell':
-        parser = argparse.ArgumentParser()
-        parser.add_argument('-number_agent', type=int, default=5,
-                            help='choose number of agents')
-        parser.add_argument('-random_seed', type=int, default=5,
-                            help='choose the random seed number')
-        parser.add_argument('-number_agent_trained_model', type=int, default=5,
-                            help='choose the number of agnet of trained model')
-        parser.add_argument('-random_seed_trained_model', type=int, default=5,
-                            help='choose the random seed number associated with trained models')
-        args = parser.parse_args()
-        print('=' * 50)
-        print(args)
-        print('=' * 50)
-        NUMBER_OF_AGENT = args.number_agent
-        random_seed = args.random_seed
-        NUMBER_OF_AGNET_TRAINED_MODEL = args.number_agent_trained_model
-        random_seed_trained_model = args.random_seed_trained_model
-        np.random.seed(random_seed)
-        tf.random.set_seed(random_seed)
-    elif input_ == 'pycharm':
-        NUMBER_OF_AGENT = 5
-        random_seed = 5
-        np.random.seed(random_seed)
-        tf.random.set_seed(random_seed)
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-number_agent', type=int, default=5,
+                        help='choose number of agents')
+    parser.add_argument('-random_seed', type=int, default=5,
+                        help='choose the random seed number')
+    parser.add_argument('-number_agent_trained_model', type=int, default=5,
+                        help='choose the number of agnet of trained model')
+    parser.add_argument('-random_seed_trained_model', type=int, default=5,
+                        help='choose the random seed number associated with trained models')
+    parser.add_argument('-num_episodes', type=int, default=5000,
+                        help='choose the number of episodes')
+
+    parser.add_argument('-rotation_reward', type=bool, default=True)
+    parser.add_argument('-w1', type=float, default=0.6)
+    parser.add_argument('-w2', type=float, default=0.1)
+    parser.add_argument('-w3', type=float, default=0.1)
+    parser.add_argument('-w4', type=float, default=0.2)
+    parser.add_argument('-w5', type=float, default=0.0)
+    parser.add_argument('-w6', type=float, default=0.0)
+    parser.add_argument('-param_id', type=str, default='test')
+
+    args = parser.parse_args()
+    print('=' * 50)
+    print(args)
+    print('=' * 50)
+    NUMBER_OF_AGENT = args.number_agent
+    random_seed = args.random_seed
+    NUMBER_OF_AGNET_TRAINED_MODEL = args.number_agent_trained_model
+    random_seed_trained_model = args.random_seed_trained_model
+    num_episodes = args.num_episodes
+    max_epLength = args.num_episodes
+    np.random.seed(random_seed)
+    tf.random.set_seed(random_seed)
+    params = {
+        'rotation_reward': args.rotation_reward,
+        'w1': args.w1,
+        'w2': args.w2,
+        'w3': args.w3,
+        'w4': args.w4,
+        'w5': args.w5,
+        'w6': args.w6,
+    }
+    # elif input_ == 'pycharm':
+    #     NUMBER_OF_AGENT = 5
+    #     random_seed = 5
+    #     np.random.seed(random_seed)
+    #     tf.random.set_seed(random_seed)
+    #     params = {}
+    #     # raise ValueError("Please use shell to run the program")
 
     # NUMBER_OF_AGENT = 4
     print("number of agent is:", NUMBER_OF_AGENT)
-    env = CustomEnv(random_initialization=False, n_agents=NUMBER_OF_AGENT)
+    print("number of episode is:", num_episodes)
+    print(params)
+    params_id = args.param_id
+    env = CustomEnv(random_initialization=False, n_agents=NUMBER_OF_AGENT, params=params)
 
-    RL = DeepQNetwork(n_agents=NUMBER_OF_AGENT,
-                      n_actions=env.action_space.n,
-                      n_features=env.observation_space.shape[0],
-                      load_model=loading_model,
-                      # path="./dqn",
-                      path="./NUM_AGENT" + str(NUMBER_OF_AGENT).zfill(2) + "/" +
-                           str(random_seed).zfill(4) + '/saved_model',
-                      output_graph=True,
-                      random_seed=random_seed,
-                      n_agents_trained_model=NUMBER_OF_AGNET_TRAINED_MODEL,
-                      random_seed_trained_model=None,
-                      number_episode=num_episodes
-                      )
+    RL = DeepQNetwork(
+        n_agents=NUMBER_OF_AGENT,
+        n_actions=env.action_space.n,
+        n_features=env.observation_space.shape[0],
+        load_model=loading_model,
+        # path="./dqn",
+        path="./NUM_AGENT" + str(NUMBER_OF_AGENT).zfill(2) + "/" + str(random_seed).zfill(
+        4) +  '/saved_model' + params_id,
+        output_graph=True,
+        random_seed=random_seed,
+        n_agents_trained_model=NUMBER_OF_AGNET_TRAINED_MODEL,
+        random_seed_trained_model=None,
+        number_episode=num_episodes,
+        model_path = os.path.join("models", params_id)
+    )
 
     Boxer_list = []
     for i in range(NUMBER_OF_AGENT):
@@ -235,7 +263,7 @@ if __name__ == "__main__":
     print("action: ", RL.choose_action(env.reset()))
     print("boxer name: ", RL.Boxer_name)
 
-    run_game()
+    run_game(params_id)
     end = time.time()
 
     RL.save_models()

@@ -1,5 +1,6 @@
 name: tf2
 channels:
+  - annaconda
   - conda-forge
   - bioconda
   - defaults
