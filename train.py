@@ -34,7 +34,9 @@ if SHOW_ACTION:
     plt.pause(0.1)
 
 # num_episodes = 5000
+
 num_episodes = 6000
+
 max_epLength = 500
 
 NUMBER_OF_AGENT = 10
