@@ -18,13 +18,13 @@ import time
 
 random.seed(constant.random_seed)
 
-N_DISCRETE_ACTIONS = 6
+N_DISCRETE_ACTIONS = 7
 
 
 class CustomEnv(gym.Env):
     metadata = {"render_modes": ["human", "rgb_array"], "render_fps": 4}
 
-    def __init__(self, random_initialization, n_agents):
+    def __init__(self, random_initialization, n_agents, target_heading=None):
         super(CustomEnv, self).__init__()
 
         '''Define action and observation space, They must be gym.space objects'''
@@ -32,6 +32,7 @@ class CustomEnv(gym.Env):
 
         self.random_initialization = random_initialization
         self.n_agents = n_agents
+        self.target_heading = target_heading
 
         self.Boxer_name_env = []
         for i in range(self.n_agents):
@@ -112,7 +113,7 @@ class CustomEnv(gym.Env):
         """reset the environment"""
         _ = self.reset()
 
-    def reset(self):
+    def reset(self, manual_set=None):
         '''reset boxes and pushers to void'''
         self.object_boxes = []
         self.object_pushers = []
@@ -128,9 +129,15 @@ class CustomEnv(gym.Env):
         '''
 
         if self.random_initialization:
+            print("Random initial position")
             box1 = Box(initial_x=random.randint(60, 181), initial_y=random.randint(120, 361), width=constant.box_width,
                        height=constant.box_height)
+        elif not manual_set is None:
+            print("Manually setting initial Box position")
+            box1 = Box(initial_x=manual_set["initial_x"], initial_y=manual_set["initial_y"], width=constant.box_width,
+                       height=constant.box_height, initial_heading=manual_set["initial_heading"])
         else:
+            print("Fixed initial position")
             box1 = Box(initial_x=120, initial_y=240, width=constant.box_width, height=constant.box_height)
 
         # box1.draw_polygon(self.screen)
@@ -251,7 +258,8 @@ class CustomEnv(gym.Env):
 
         '''Check rotation reward and distance reward'''
         reward_rotation = box1.check_rotation_reward()
-        reward_distance = box1.check_distance_reward(self)
+        # reward_distance = box1.check_distance_reward(self)
+        reward_distance = box1.check_distance_reward_with_angle(self)
 
         '''Add rewrad together first part of reward'''
         reward = []
@@ -288,7 +296,11 @@ class CustomEnv(gym.Env):
 
         if self.reach_goal:
             reward_goal = 900
-            print("reach_goal_reward_get")
+            if not self.target_heading is None:
+                delta_angle = np.mod(self.target_heading-self.object_boxes[0].current_heading, 360)
+                reward_goal *= 1 + np.cos(delta_angle/180*np.pi)
+                # reward_goal *= np.exp(-0.5*np.abs(delta_angle)/180*np.pi)
+            print(f"reach_goal_reward_get: {reward_goal}")
         else:
             # reward_goal = -1
             '''Starting seven actions 2/14/2019, reward_goal will not give negative -1 to it'''

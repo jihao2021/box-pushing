@@ -24,8 +24,19 @@ import time
 from scripts.DQN_modified_plus_simplified import DeepQNetwork
 from scripts.Boxer import Boxer
 
+import matplotlib.pyplot as plt
+
+SHOW_ACTION = False  # for debug purpose
+
+if SHOW_ACTION:
+    fig = plt.figure()
+    # plt.show()
+    plt.pause(0.1)
+
 # num_episodes = 5000
-num_episodes = 8000
+
+num_episodes = 6000
+
 max_epLength = 500
 
 NUMBER_OF_AGENT = 10
@@ -63,6 +74,13 @@ def run_game():
             """RL choose action based on observation"""
 
             action = RL.choose_action(observation)
+
+            if SHOW_ACTION:
+                plt.cla()
+                plt.hist(list(action.values()), bins=[i-0.5 for i in range(8)], range=(0, 7))
+                plt.ylim([0, NUMBER_OF_AGENT])
+                plt.draw()
+
 
             """Take action and get next observation and reward"""
 
@@ -109,7 +127,7 @@ def run_game():
 
     print('game is all finished, fight on!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
 
-    RL.save_models()
+    RL.save_models(train_seed=random_seed)
 
     '''
     resized_list_reward = []
@@ -129,12 +147,12 @@ def run_game():
     # if not os.path.exists(output_path):
     #    os.makedirs(output_path)
 
-    output_path_reward = "./NUM_AGENT" + str(NUMBER_OF_AGENT).zfill(2) + "/" + str(random_seed).zfill(
+    output_path_reward = "./NUM_AGENT" + str(NUMBER_OF_AGENT).zfill(2) + f"{model_name}/" + str(random_seed).zfill(
         4) + '/reward_output'
     if not os.path.exists(output_path_reward):
         os.makedirs(output_path_reward)
 
-    output_path_distance = "./NUM_AGENT" + str(NUMBER_OF_AGENT).zfill(2) + "/" + str(random_seed).zfill(
+    output_path_distance = "./NUM_AGENT" + str(NUMBER_OF_AGENT).zfill(2) + f"{model_name}/" + str(random_seed).zfill(
         4) + '/distance_output'
     if not os.path.exists(output_path_distance):
         os.makedirs(output_path_distance)
@@ -183,7 +201,7 @@ if __name__ == "__main__":
 
     '''
     # input = 'pycharm'
-    input_ = 'pycharm'
+    input_ = 'shell'
     if input_ == 'shell':
         parser = argparse.ArgumentParser()
         parser.add_argument('-number_agent', type=int, default=3,
@@ -194,6 +212,8 @@ if __name__ == "__main__":
                             help='choose the number of agnet of trained model')
         parser.add_argument('-random_seed_trained_model', type=int, default=1,
                             help='choose the random seed number associated with trained models')
+        parser.add_argument('-model_name', type=str, default="",
+                            help='name of the model')
         args = parser.parse_args()
         print('=' * 50)
         print(args)
@@ -201,18 +221,20 @@ if __name__ == "__main__":
         NUMBER_OF_AGENT = args.number_agent
         random_seed = args.random_seed
         NUMBER_OF_AGNET_TRAINED_MODEL = args.number_agent_trained_model
+        model_name = args.model_name
         random_seed_trained_model = args.random_seed_trained_model
         np.random.seed(random_seed)
         tf.random.set_seed(random_seed)
     elif input_ == 'pycharm':
         NUMBER_OF_AGENT = 5
-        random_seed = 5
+        random_seed = 500
+        model_name = "target135d"
         np.random.seed(random_seed)
         tf.random.set_seed(random_seed)
 
     # NUMBER_OF_AGENT = 4
     print("number of agent is:", NUMBER_OF_AGENT)
-    env = CustomEnv(random_initialization=False, n_agents=NUMBER_OF_AGENT)
+    env = CustomEnv(random_initialization=True, n_agents=NUMBER_OF_AGENT, target_heading=225)
 
     RL = DeepQNetwork(n_agents=NUMBER_OF_AGENT,
                       n_actions=env.action_space.n,
@@ -225,7 +247,8 @@ if __name__ == "__main__":
                       random_seed=random_seed,
                       n_agents_trained_model=NUMBER_OF_AGNET_TRAINED_MODEL,
                       random_seed_trained_model=None,
-                      number_episode=num_episodes
+                      number_episode=num_episodes,
+                      model_name=model_name
                       )
 
     Boxer_list = []
@@ -239,7 +262,7 @@ if __name__ == "__main__":
     end = time.time()
 
 
-    RL.save_models()
+    # RL.save_models(train_seed=random_seed)
     # print('total time of this simulation case is:  ', end - start)
     print('total time is: {} seconds'.format(str(end - start)))
 

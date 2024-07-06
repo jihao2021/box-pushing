@@ -288,6 +288,8 @@ class Box():
         self.previous_distance = self.current_distance
         return reward_distance
 
+
+
     def check_rotation_reward(self):
         change_angle = self.change_angle
         reward_rotation = math.cos(math.radians(change_angle)) - 0.98

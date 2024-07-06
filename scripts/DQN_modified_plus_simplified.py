@@ -18,8 +18,10 @@ class DeepQNetwork:
             random_seed,
             n_agents_trained_model,
             random_seed_trained_model,
-            number_episode
+            number_episode,
+            model_name=""
     ):
+        self.model_name = model_name
         self.num_episodes = number_episode
         self.n_agents = n_agents
         self.step = 0
@@ -51,28 +53,30 @@ class DeepQNetwork:
         #                                "/" + str(random_seed).zfill(4) +
         #                                '/logs', self.sess.graph)
 
-    def save_models(self):
+    def save_models(self, train_seed):
         """
         Save weights to `path`
         """
-        parent_dir = f"models/job{self.n_agents}/"
+        parent_dir = f"models/job{self.n_agents}{self.model_name}/{train_seed}/"
 
         # parent_dir = os.path.dirname(path)
         if not os.path.exists(parent_dir):
             os.makedirs(parent_dir)
         # Save the weights
         for i in range(self.n_agents):
-            self.Boxer[i].eval_net.save_weights(f"models/job{self.n_agents}/model-{self.num_episodes}Boxer{i}-eval.h5")
+            self.Boxer[i].eval_net.save_weights(
+                f"models/job{self.n_agents}{self.model_name}/{train_seed}/model-{self.num_episodes}Boxer{i}-eval.h5")
             self.Boxer[i].target_net.save_weights(
-                f"models/job{self.n_agents}/model-{self.num_episodes}Boxer{i}-target.h5")
+                f"models/job{self.n_agents}{self.model_name}/{train_seed}/model-{self.num_episodes}Boxer{i}-target.h5")
 
-    def loading_parameters(self, num_trained, random_seed):
+    def loading_parameters(self, train_seed, num_trained, random_seed):
         if num_trained == self.n_agents:  # same number of agents
             print(f"loading exact {num_trained} trained models")
             for i in range(self.n_agents):
-                self.Boxer[i].eval_net.load_weights(f"models/job{self.n_agents}/model-{self.num_episodes}Boxer{i}-eval.h5")
+                self.Boxer[i].eval_net.load_weights(
+                    f"models/job{self.n_agents}{self.model_name}/{train_seed}/model-{self.num_episodes}Boxer{i}-eval.h5")
                 self.Boxer[i].target_net.load_weights(
-                    f"models/job{self.n_agents}/model-{self.num_episodes}Boxer{i}-target.h5")
+                    f"models/job{self.n_agents}{self.model_name}/{train_seed}/model-{self.num_episodes}Boxer{i}-target.h5")
 
         elif num_trained < self.n_agents:
             np.random.seed(random_seed)
@@ -83,9 +87,9 @@ class DeepQNetwork:
             print(f"sampling from {num_trained} trained models to fit team of {self.n_agents}")
             for i, id in enumerate(idx):
                 self.Boxer[i].eval_net.load_weights(
-                    f"models/job{num_trained}/model-{self.num_episodes}Boxer{id}-eval.h5")
+                    f"models/job{num_trained}{self.model_name}/{train_seed}/model-{self.num_episodes}Boxer{id}-eval.h5")
                 self.Boxer[i].target_net.load_weights(
-                    f"models/job{num_trained}/model-{self.num_episodes}Boxer{id}-target.h5")
+                    f"models/job{num_trained}{self.model_name}/{train_seed}/model-{self.num_episodes}Boxer{id}-target.h5")
 
         else:  # if num_trained > self.n_agents
             np.random.seed(random_seed)
@@ -96,9 +100,9 @@ class DeepQNetwork:
             print(f"sampling from {num_trained} trained models to fit team of {self.n_agents}")
             for i, id in enumerate(idx):
                 self.Boxer[i].eval_net.load_weights(
-                    f"models/job{num_trained}/model-{self.num_episodes}Boxer{id}-eval.h5")
+                    f"models/job{num_trained}{self.model_name}/{train_seed}/model-{self.num_episodes}Boxer{id}-eval.h5")
                 self.Boxer[i].target_net.load_weights(
-                    f"models/job{num_trained}/model-{self.num_episodes}Boxer{id}-target.h5")
+                    f"models/job{num_trained}{self.model_name}/{train_seed}/model-{self.num_episodes}Boxer{id}-target.h5")
 
     def choose_action(self, observation):
         actions = []
