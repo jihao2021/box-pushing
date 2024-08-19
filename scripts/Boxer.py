@@ -15,6 +15,7 @@ import matplotlib.pyplot as plt
 #tf.set_random_seed(constant.random_seed)
 
 class MyModel(keras.Model):
+
     def __init__(self, size=16, num_actions=6):
         super().__init__()
         self.dense1 = layers.Dense(size, activation='relu')
@@ -47,6 +48,9 @@ class MyModel(keras.Model):
 
 
 class Boxer():
+    
+    share_num = 0 #class variable shared by all instance
+
     def __init__(self,
                  name, 
                  n_actions, 
@@ -58,7 +62,8 @@ class Boxer():
                  random_seed,
                  n_agents_trained_model,
                  random_seed_trained_model,
-                 number_episode
+                 number_episode,
+                 distribution
                  ):
         self.name = name
         self.step = 0
@@ -85,6 +90,7 @@ class Boxer():
         self.n_agents_trained_model=n_agents_trained_model
         self.random_seed_trained_model=random_seed_trained_model
         self.number_episode=number_episode
+        self.distribution=self.generate_values()
 
         '''total learning step'''
         self.learn_step_counter = 0
@@ -145,6 +151,12 @@ class Boxer():
         self.four_hit = 0  ##left-top corner hit
         self.five_hit = 0  ## top hit
         self.six_hit = 0  ##bottom hit
+
+    def get_share_num(self):
+        return Boxer.share_num
+
+    def set_share_num(self, value):
+        Boxer.share_num = value
 
     def _build_net_new(self, name, reuse=False):
         n_l1, n_l2, w_initializer, b_initializer = 16, 32, tf.random_normal_initializer(0., 0.3), \
@@ -243,12 +255,59 @@ class Boxer():
         actions_value = self.eval_net(observation)
         qmax = np.max(actions_value)
         return qmax
+    
+    def generate_values_helper(self):
+        value1 = np.random.uniform(0, 0.12)
+        remaining_sum = 1 - value1
+        values = np.random.rand(3)
+        values /= values.sum()  # Normalize to sum to 1
+        values *= remaining_sum  # Scale to the remaining_sum
+        all_values = np.concatenate(([value1], values))
+        while abs(all_values[0] - all_values[2]) < 0.15:
+            value1 = np.random.uniform(0, 0.12)
+            remaining_sum = 1 - value1
+            values = np.random.rand(3)
+            values /= values.sum()
+            values *= remaining_sum
+            all_values = np.concatenate(([value1], values))
+        result_4x4 = np.zeros((4, 4))
+        for i in range(4):
+            result_4x4[i] = np.roll(all_values, shift=i)
+        result_4x6 = np.zeros((4, 6))
+        result_4x6[:, 0] = result_4x4[:, 0]  # 0th column of 4x6 is the same as 0th column of 4x4
+        result_4x6[:, 1] = result_4x4[:, 1] / 2  # 1st column of 4x6 is half of 1st column of 4x4
+        result_4x6[:, 2] = result_4x4[:, 1] / 2 # 2nd column of 4x6 is the same as 2nd column of 4x4
+        result_4x6[:, 3] = result_4x4[:, 2]  # 3rd column of 4x6 is half of 3rd column of 4x4
+        result_4x6[:, 4] = result_4x4[:, 3] / 2  # 4th column of 4x6 is half of 4th column of 4x4
+        result_4x6[:, 5] = result_4x4[:, 3] / 2 # 5th column of 4x6 is the same as 4th column of 4x4
+
+        row_sums = result_4x6.sum(axis=1)
+        result_4x6 /= row_sums[:, np.newaxis]  # Divide each row by its sum
+
+        return result_4x6
+    
+    def generate_values(self):
+        combined_p_arrays = np.zeros((0, 6))
+
+        for i in range(4):
+            p_arrays_temp = self.generate_values_helper()
+            combined_p_arrays = np.vstack((combined_p_arrays, p_arrays_temp))
+
+        return combined_p_arrays
 
     def choose_action_greedy(self, observation, epsilon_greedy):
         observation = observation[np.newaxis, :]
         self.epsilon = epsilon_greedy
+
+
         if np.random.uniform() < self.epsilon:
-            action = np.random.randint(0, self.n_actions)
+            # Choose the row based on prob_num
+            row_index = self.get_share_num() % self.distribution.shape[0]
+            chosen_row = self.distribution[row_index]
+            
+            # Choose an action based on the probabilities in the chosen row
+            action = np.random.choice(range(len(chosen_row)), p=chosen_row)
+            
         else:
             actions_value = self.eval_net(observation)
             action = np.argmax(actions_value)

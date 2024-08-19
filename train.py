@@ -59,6 +59,7 @@ def run_game():
             """fresh env"""
 
             # env.render()
+            Boxer.set_share_num(int(time.time() * 1000))
 
             """RL choose action based on observation"""
 
