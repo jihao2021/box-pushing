@@ -90,7 +90,7 @@ class Boxer():
         self.n_agents_trained_model=n_agents_trained_model
         self.random_seed_trained_model=random_seed_trained_model
         self.number_episode=number_episode
-        self.distribution=self.generate_values()
+        self.distribution=self.generate_values(distribution)
 
         '''total learning step'''
         self.learn_step_counter = 0
@@ -155,7 +155,7 @@ class Boxer():
     def get_share_num(self):
         return Boxer.share_num
 
-    def set_share_num(self, value):
+    def set_share_num(value):
         Boxer.share_num = value
 
     def _build_net_new(self, name, reuse=False):
@@ -286,10 +286,10 @@ class Boxer():
 
         return result_4x6
     
-    def generate_values(self):
+    def generate_values(self, distribution):
         combined_p_arrays = np.zeros((0, 6))
 
-        for i in range(4):
+        for i in range(distribution):
             p_arrays_temp = self.generate_values_helper()
             combined_p_arrays = np.vstack((combined_p_arrays, p_arrays_temp))
 
@@ -304,9 +304,9 @@ class Boxer():
             # Choose the row based on prob_num
             row_index = self.get_share_num() % self.distribution.shape[0]
             chosen_row = self.distribution[row_index]
-            
-            # Choose an action based on the probabilities in the chosen row
             action = np.random.choice(range(len(chosen_row)), p=chosen_row)
+
+            #action = np.random.randint(0, self.n_actions)
             
         else:
             actions_value = self.eval_net(observation)

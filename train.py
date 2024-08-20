@@ -28,7 +28,7 @@ from scripts.Boxer import Boxer
 num_episodes = 8000
 max_epLength = 500
 
-NUMBER_OF_AGENT = 10
+NUMBER_OF_AGENT = 100
 NUMBER_OF_AGNET_TRAINED_MODEL = 0
 
 
@@ -206,7 +206,7 @@ if __name__ == "__main__":
         np.random.seed(random_seed)
         tf.random.set_seed(random_seed)
     elif input_ == 'pycharm':
-        NUMBER_OF_AGENT = 5
+        NUMBER_OF_AGENT = 5 #PROBLEM CODE
         random_seed = 5
         np.random.seed(random_seed)
         tf.random.set_seed(random_seed)
@@ -226,7 +226,8 @@ if __name__ == "__main__":
                       random_seed=random_seed,
                       n_agents_trained_model=NUMBER_OF_AGNET_TRAINED_MODEL,
                       random_seed_trained_model=None,
-                      number_episode=num_episodes
+                      number_episode=num_episodes,
+                      distribution=10
                       )
 
     Boxer_list = []

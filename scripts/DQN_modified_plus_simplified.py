@@ -18,7 +18,8 @@ class DeepQNetwork:
             random_seed,
             n_agents_trained_model,
             random_seed_trained_model,
-            number_episode
+            number_episode,
+            distribution
     ):
         self.num_episodes = number_episode
         self.n_agents = n_agents
@@ -42,7 +43,8 @@ class DeepQNetwork:
                                     random_seed=random_seed,
                                     n_agents_trained_model=n_agents_trained_model,
                                     random_seed_trained_model=random_seed_trained_model,
-                                    number_episode=number_episode
+                                    number_episode=number_episode,
+                                    distribution=distribution
                                     )
                               )
 
