@@ -259,10 +259,12 @@ class CustomEnv(gym.Env):
             reward.append(self.w1 * reward_goal + self.w2 * reward_obstacle + self.w3 * reward_rotation + \
                           self.w4 * reward_distance)
 
-        reward_efficiency = constant.reward_efficiency
+        #reward_efficiency = constant.reward_efficiency
+        #print(reward_efficiency) 
 
-        for i in range(self.n_agents):
-            reward[i] += self.w5 * reward_efficiency[i]
+        #for i in range(self.n_agents):
+        #    reward[i] += self.w5 * reward_efficiency[i]
+        #print(reward_efficiency)
 
         reward_dict = {}
         for i in range(self.n_agents):
@@ -271,6 +273,7 @@ class CustomEnv(gym.Env):
         done_dict = {}
         for i in range(self.n_agents):
             done_dict.update({Boxer_name[i]: done})
+
         return reward_dict, done_dict
 
     def check_goal_and_collision_reward_new(self):

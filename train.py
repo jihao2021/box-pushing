@@ -126,27 +126,21 @@ def run_game():
         resized_list_total_distance_mean.append(np.average(resized_list_total_distance[i],1))
     '''
 
-    # output_path = "./training_output"
-    # if not os.path.exists(output_path):
-    #    os.makedirs(output_path)
+    output_path = "./training_output"
+    if not os.path.exists(output_path):
+        os.makedirs(output_path)
 
-    output_path_reward = "./NUM_AGENT" + str(NUMBER_OF_AGENT).zfill(2) + "/" + str(random_seed).zfill(
-        4) + '/reward_output'
+    output_path_reward = output_path + '/reward_output'
     if not os.path.exists(output_path_reward):
         os.makedirs(output_path_reward)
 
-    output_path_distance = "./NUM_AGENT" + str(NUMBER_OF_AGENT).zfill(2) + "/" + str(random_seed).zfill(
-        4) + '/distance_output'
+    output_path_distance = output_path + '/distance_output'
     if not os.path.exists(output_path_distance):
         os.makedirs(output_path_distance)
 
     with open(os.path.join(output_path_reward,
-                           'reward_history' +
-                           '-NUM_AGENT' +
-                           str(NUMBER_OF_AGENT).zfill(2) +
-                           '-Random_seed' +
-                           str(random_seed).zfill(4) +
-                           '.csv'), 'w') as data_dump:
+                           'reward' +
+                           str(NUMBER_OF_AGENT).zfill(2) +'.csv'), 'w') as data_dump:
         wr = csv.writer(data_dump)
         for i in range(NUMBER_OF_AGENT):
             # wr.writerow(resized_list_reward_mean[i])
@@ -154,12 +148,8 @@ def run_game():
         data_dump.close()
 
     with open(os.path.join(output_path_distance,
-                           'total_distance_list' +
-                           '-NUM_AGENT' +
-                           str(NUMBER_OF_AGENT).zfill(2) +
-                           '-Random_seed' +
-                           str(random_seed).zfill(4) +
-                           '.csv'), 'w') as data_dump:
+                           'distance' +
+                           str(NUMBER_OF_AGENT).zfill(2) + '.csv'), 'w') as data_dump:
         wr = csv.writer(data_dump)
         for i in range(NUMBER_OF_AGENT):
             # wr.writerow(resized_list_total_distance_mean[i])
@@ -206,7 +196,7 @@ if __name__ == "__main__":
         np.random.seed(random_seed)
         tf.random.set_seed(random_seed)
     elif input_ == 'pycharm':
-        NUMBER_OF_AGENT = 5 #PROBLEM CODE
+        NUMBER_OF_AGENT = 15 #PROBLEM CODE stops working at 16
         random_seed = 5
         np.random.seed(random_seed)
         tf.random.set_seed(random_seed)
