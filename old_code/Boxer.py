@@ -243,6 +243,11 @@ class Boxer():
             if self.epsilon > self.endE:
                 self.epsilon -= self.stepDrop
         if np.random.uniform() < self.epsilon or self.step < self.pre_train_steps:
+            # Choose the row based on prob_num
+            #row_index = self.get_share_num() % self.distribution.shape[0]
+            #chosen_row = self.distribution[row_index]
+            #action = np.random.choice(range(len(chosen_row)), p=chosen_row)
+
             action = np.random.randint(0, self.n_actions)
         else:
             actions_value = self.eval_net(observation)
@@ -299,14 +304,13 @@ class Boxer():
         observation = observation[np.newaxis, :]
         self.epsilon = epsilon_greedy
 
-
         if np.random.uniform() < self.epsilon:
             # Choose the row based on prob_num
-            row_index = self.get_share_num() % self.distribution.shape[0]
-            chosen_row = self.distribution[row_index]
-            action = np.random.choice(range(len(chosen_row)), p=chosen_row)
+            #row_index = self.get_share_num() % self.distribution.shape[0]
+            #chosen_row = self.distribution[row_index]
+            #action = np.random.choice(range(len(chosen_row)), p=chosen_row)
 
-            #action = np.random.randint(0, self.n_actions)
+            action = np.random.randint(0, self.n_actions)
             
         else:
             actions_value = self.eval_net(observation)

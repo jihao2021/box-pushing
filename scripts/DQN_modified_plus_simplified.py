@@ -106,7 +106,7 @@ class DeepQNetwork:
         actions = []
         for i in range(self.n_agents):
             actions.append(self.Boxer[i].choose_action(observation[self.Boxer_name[i]]))
-
+            print(actions)
         action_list = {}
         for i in range(self.n_agents):
             action_list.update({self.Boxer_name[i]: actions[i]})
