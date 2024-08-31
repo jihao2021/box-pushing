@@ -28,7 +28,7 @@ from scripts.Boxer import Boxer
 num_episodes = 8000
 max_epLength = 500
 
-NUMBER_OF_AGENT = 100
+NUMBER_OF_AGENT = 10000 #doesnt matter
 NUMBER_OF_AGNET_TRAINED_MODEL = 0
 
 
@@ -80,7 +80,7 @@ def run_game():
 
             """Swap observation"""
             observation = observation_
-
+            Boxer_list[i].epsilon
             episode_steps += 1
 
             RL.step += 1
@@ -107,6 +107,10 @@ def run_game():
             print("Episode {}, average reward of last 25 episode of Boxer1 is {}".format(episode,
                                                                                          np.mean(reward_list[0][-25:])))
             print("epsilon of Boxer1 is :", Boxer_list[0].epsilon)
+        '''
+        if Boxer_list[0].epsilon < 0.005:
+            break
+        '''
 
     print('game is all finished, fight on!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
 
@@ -196,7 +200,7 @@ if __name__ == "__main__":
         np.random.seed(random_seed)
         tf.random.set_seed(random_seed)
     elif input_ == 'pycharm':
-        NUMBER_OF_AGENT = 15 #PROBLEM CODE stops working at 16
+        NUMBER_OF_AGENT = 5 #PROBLEM CODE stops working at 16
         random_seed = 5
         np.random.seed(random_seed)
         tf.random.set_seed(random_seed)

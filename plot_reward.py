@@ -1,66 +1,49 @@
-import constant
 import csv
 import numpy as np
 import matplotlib.pyplot as plt
+import constant  # Ensure this module exists and color_list is defined.
 
-
-def plot_reward(NUMBER_OF_AGENT):
-    list1 = []
-    result = [[] for _ in range(NUMBER_OF_AGENT)]
+def plot_reward(file_path):
+    NUMBER_OF_AGENT = count_rows_csv(file_path)
+    reward_list = [[] for _ in range(NUMBER_OF_AGENT)]
     color_list = constant.color_list
 
-    label_list = []
-    for i in range(NUMBER_OF_AGENT):
-        label_list.append('agent' + str(i + 1))
-    reward_list = [[] for _ in range(NUMBER_OF_AGENT+NUMBER_OF_AGENT)]
-    result = [[] for _ in range(NUMBER_OF_AGENT)]
-
-    with open('./training_output/reward_output/reward15.csv') as csvfile:
-        readCSV = csv.reader(csvfile,delimiter=',')
-
-        for row in readCSV:
-            list1.append(row)
-            #print(list1)
-
-
-        for i in range(NUMBER_OF_AGENT):
-            reward_list[i] = list1[i]
-            reward_list[i] = list(map(float,reward_list[i]))
-
-        #print(reward_list)
-
-        #for i in range(NUMBER_OF_AGENT):
-            #result[i] = np.convolve(reward_list[i], np.ones((2,)) / 2, mode='full')
-            #result[i] = result[i][:-2]
-
-    with open('./training_output/reward_output/reward15.csv') as csvfile:
-        #print(list1)
+    with open(file_path) as csvfile:
         readCSV = csv.reader(csvfile, delimiter=',')
-        for row in readCSV:
-            list1.append(row)
-        #print(np.shape(list1))
-
+        list1 = [row for row in readCSV]  # Read all rows at once
 
         for i in range(NUMBER_OF_AGENT):
-            reward_list[i+NUMBER_OF_AGENT] = list1[i+NUMBER_OF_AGENT]
-            reward_list[i+NUMBER_OF_AGENT] = list(map(float, reward_list[i+NUMBER_OF_AGENT]))
+            if len(list1) > i:  # Ensure there is enough data
+                reward_list[i] = list(map(float, list1[i]))
+            if len(list1) > i + NUMBER_OF_AGENT:  # Ensure there is enough data
+                additional_rewards = list(map(float, list1[i + NUMBER_OF_AGENT]))
+                reward_list[i] = [(x + y) / 2 for x, y in zip(reward_list[i], additional_rewards)]
 
-        for i in range(NUMBER_OF_AGENT):
-            reward_list[i] = [(x+y)/2 for x,y in zip(reward_list[i],reward_list[i+NUMBER_OF_AGENT])]
-            #pass
-            #reward_list[i + NUMBER_OF_AGENT] = list(map(float, reward_list[i + NUMBER_OF_AGENT]))
+        combined_rewards = np.mean(reward_list, axis=0)
 
-        for i in range(NUMBER_OF_AGENT):
-            result[i] = np.convolve(reward_list[i], np.ones((2,)) / 2, mode='full')
-            result[i] = result[i][:-2]
+        window_size = 100  # Adjust the window size for more smoothing
+        window = np.ones(window_size) / window_size
+        smoothed_rewards = np.convolve(combined_rewards, window, mode='valid')
 
-        for i in range(NUMBER_OF_AGENT):
-            plt.plot(result[i], color_list[i],label=label_list[i])
+        plt.plot(smoothed_rewards, color='blue', label='Smoothed Average Reward')
 
         plt.legend()
         plt.ylabel('Reward')
-        plt.xlabel('training episode(every 100 episode)')
+        plt.xlabel('Training Episode (every 100 episodes)')
         plt.show()
 
-NUMBER_OF_AGENT = 15
-plot_reward(NUMBER_OF_AGENT)
+def count_rows_csv(file_path):
+    try:
+        with open(file_path, 'r') as file:
+            reader = csv.reader(file)
+            row_count = sum(1 for row in reader)
+        return row_count
+    except FileNotFoundError:
+        print(f"Error: The file '{file_path}' does not exist.")
+        return None
+    except Exception as e:
+        print(f"An error occurred: {e}")
+        return None
+
+file_path = './training_output/reward_output/reward02.csv'
+plot_reward(file_path)
