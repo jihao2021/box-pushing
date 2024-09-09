@@ -45,5 +45,5 @@ def count_rows_csv(file_path):
         print(f"An error occurred: {e}")
         return None
 
-file_path = './training_output/reward_output/reward02.csv'
+file_path = './training_output/reward_output/reward150.csv'
 plot_reward(file_path)

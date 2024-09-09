@@ -25,8 +25,8 @@ from scripts.DQN_modified_plus_simplified import DeepQNetwork
 from scripts.Boxer import Boxer
 
 # num_episodes = 5000
-num_episodes = 8000
-max_epLength = 500
+num_episodes = 4000 #8000
+max_epLength = 1000 #500
 
 NUMBER_OF_AGENT = 10000 #doesnt matter
 NUMBER_OF_AGNET_TRAINED_MODEL = 0
@@ -59,7 +59,7 @@ def run_game():
             """fresh env"""
 
             # env.render()
-            Boxer.set_share_num(int(time.time() * 1000))
+            
 
             """RL choose action based on observation"""
 
@@ -111,6 +111,7 @@ def run_game():
         if Boxer_list[0].epsilon < 0.005:
             break
         '''
+        
 
     print('game is all finished, fight on!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
 
@@ -200,12 +201,12 @@ if __name__ == "__main__":
         np.random.seed(random_seed)
         tf.random.set_seed(random_seed)
     elif input_ == 'pycharm':
-        NUMBER_OF_AGENT = 5 #PROBLEM CODE stops working at 16
+        NUMBER_OF_AGENT = 150 #PROBLEM CODE stops working at 16
         random_seed = 5
         np.random.seed(random_seed)
         tf.random.set_seed(random_seed)
 
-    # NUMBER_OF_AGENT = 4
+    # NUMBER_OF_AGENT = 4False
     print("number of agent is:", NUMBER_OF_AGENT)
     env = CustomEnv(random_initialization=False, n_agents=NUMBER_OF_AGENT)
 

@@ -2,6 +2,7 @@ import numpy as np
 import tensorflow as tf
 import matplotlib.pyplot as plt
 import os
+import time
 from .Boxer import Boxer
 from . import constant
 
@@ -104,9 +105,10 @@ class DeepQNetwork:
 
     def choose_action(self, observation):
         actions = []
+        Boxer.set_share_num(int(time.time() * 1000))
         for i in range(self.n_agents):
             actions.append(self.Boxer[i].choose_action(observation[self.Boxer_name[i]]))
-            print(actions)
+            #print(actions)
         action_list = {}
         for i in range(self.n_agents):
             action_list.update({self.Boxer_name[i]: actions[i]})

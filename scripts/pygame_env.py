@@ -324,19 +324,17 @@ class CustomEnv(gym.Env):
             self.done = True
         return reward_goal, reward_obstacle, self.done
 
-    def step(self, action, Boxer_name):
+    def step(self, actions, Boxer_name):
         box1 = self.object_boxes[0]
-
+        
         # Can simulate up to 10 agents?
         for i in range(self.n_agents):
-            for key, value in action.items():
-                '''Check if the last letter is the same or not'''
+            for key, value in actions.items():
                 if key[-1] == self.object_pushers[i].name[-1]:
-                    action_pusher = action[key]
+                    action_pusher = actions[key]
             self.object_pushers[i].move(action_pusher, box1)
-
-        box1.move(action, Boxer_name)
-
+        
+        box1.move(actions, Boxer_name)
         self.render()
 
         '''Newly added box_checker movement'''

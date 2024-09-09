@@ -46,5 +46,5 @@ def count_rows_csv(file_path):
         print(f"An error occurred: {e}")
         return None
 
-file_path = './training_output/distance_output/distance02.csv'
+file_path = './training_output/distance_output/distance150.csv'
 plot_distance(file_path)

@@ -62,6 +62,7 @@ class Pusher():
         
     def move(self, action, Box1):
         self.heading_vector = Box1.heading_vector
+        
 
         '''initialize x_random and y_random and this is the relative coordinate of the pusher to box center'''
 

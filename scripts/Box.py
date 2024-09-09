@@ -10,6 +10,8 @@ from .coordinate_tranformation import local_to_global_transform, global_to_local
 """Define Class Box:"""
 class Box():
     def __init__(self, initial_x, initial_y,  width, height):
+        self.speed_factor = 0.1 #CHANGE AS NEEDED
+
         self.width = width
         self.height = height
         self.initial_position_vector = pg.math.Vector2(initial_x,initial_y)
@@ -18,12 +20,12 @@ class Box():
         self.heading_vector = pg.math.Vector2(1,0)
         _, self.current_heading = self.heading_vector.as_polar()
 
-        self.one_hit = 0   ##right-top corner hit
-        self.two_hit = 0   ##right-down corner hit
-        self.three_hit = 0  ##left-down corner hit
-        self.four_hit = 0  ##left-top corner hit
-        self.five_hit = 0  ## top hit
-        self.six_hit = 0  ##bottom hit
+        self.one_hit = 0   ##top hit
+        self.two_hit = 0   ##right-top corner hit
+        self.three_hit = 0  ##right-down corner hit
+        self.four_hit = 0  ##down hit
+        self.five_hit = 0  ##left-down corner hit
+        self.six_hit = 0  ##left-top corner hit
 
         self.change_x_self = 0  ## change of x with respect to local coordinate
         self.change_y_self = 0  ##change of y with respect to local coordinate
@@ -57,12 +59,13 @@ class Box():
         self.previous_distance = -100
         self.current_distance = None
 
-    def move(self, action, Boxer_name):
-        self.determine_total_hit(action, Boxer_name)
+    def move(self, actions, Boxer_name):
+        self.determine_total_hit(actions, Boxer_name)
         self.determine_move()
         self.determine_vertices()
 
     def determine_total_hit(self, action, Boxer_name):
+        #print(action)
         self.one_hit = 0
         self.two_hit = 0
         self.three_hit = 0
@@ -93,11 +96,12 @@ class Box():
             
     """Calculate box movement with respect to box local coordinate system"""
     def determine_move(self):
-        self.change_x_self = (self.three_hit + self.four_hit - self.one_hit - self.two_hit) / 1 * 5
-        self.change_y_self = (self.five_hit - self.six_hit) / 1 * 5
+        #print(self.one_hit, self.two_hit, self.three_hit, self.four_hit, self.five_hit, self.six_hit)
+        self.change_x_self = (self.five_hit + self.six_hit - self.two_hit - self.three_hit) / 1 * 5 * self.speed_factor
+        self.change_y_self = (self.four_hit - self.one_hit) / 1 * 5 * self.speed_factor
         self.velocity_vector = self.change_x_self * self.heading_vector + self.change_y_self * self.heading_vector.rotate(90)
         self.position_vector += self.velocity_vector
-        self.change_angle = (self.one_hit  + self.three_hit - self.two_hit - self.four_hit) / 1 * 5
+        self.change_angle = (self.two_hit  + self.five_hit - self.three_hit - self.six_hit) / 1 * 5
         self.heading_vector = self.heading_vector.rotate(self.change_angle)
         _, self.current_heading = self.heading_vector.as_polar()
 
@@ -289,9 +293,12 @@ class Box():
         return reward_distance
 
     def check_rotation_reward(self):
+        return 0
+        '''
         change_angle = self.change_angle
         reward_rotation = math.cos(math.radians(change_angle)) - 0.98
         return reward_rotation
+        '''
 
 
 
