@@ -351,4 +351,12 @@ class CustomEnv(gym.Env):
         info = {}
         for i in range(self.n_agents):
             info.update({'Boxer' + str(i + 1): information})
-        return state, reward, done, info
+
+        success = self.reach_goal
+
+        if success:
+            success = 1
+        else:
+            success = 0
+
+        return state, reward, done, info, success

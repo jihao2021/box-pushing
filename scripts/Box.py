@@ -10,7 +10,7 @@ from .coordinate_tranformation import local_to_global_transform, global_to_local
 """Define Class Box:"""
 class Box():
     def __init__(self, initial_x, initial_y,  width, height):
-        self.speed_factor = 0.1 #CHANGE AS NEEDED
+        self.speed_factor = 1/3 #CHANGE AS NEEDED
 
         self.width = width
         self.height = height
@@ -101,7 +101,7 @@ class Box():
         self.change_y_self = (self.four_hit - self.one_hit) / 1 * 5 * self.speed_factor
         self.velocity_vector = self.change_x_self * self.heading_vector + self.change_y_self * self.heading_vector.rotate(90)
         self.position_vector += self.velocity_vector
-        self.change_angle = (self.two_hit  + self.five_hit - self.three_hit - self.six_hit) / 1 * 5
+        self.change_angle = (self.two_hit  + self.five_hit - self.three_hit - self.six_hit) / 1 * 5 * self.speed_factor
         self.heading_vector = self.heading_vector.rotate(self.change_angle)
         _, self.current_heading = self.heading_vector.as_polar()
 
@@ -294,11 +294,10 @@ class Box():
 
     def check_rotation_reward(self):
         return 0
-        '''
         change_angle = self.change_angle
         reward_rotation = math.cos(math.radians(change_angle)) - 0.98
         return reward_rotation
-        '''
+        
 
 
 

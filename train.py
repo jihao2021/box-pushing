@@ -15,6 +15,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import tensorflow as tf
 import csv
+import random
 import os
 import os.path
 # from mpl_toolkits.mplot3d import Axes3D
@@ -26,7 +27,7 @@ from scripts.Boxer import Boxer
 
 # num_episodes = 5000
 num_episodes = 4000 #8000
-max_epLength = 1000 #500
+max_epLength = 300 #500
 
 NUMBER_OF_AGENT = 10000 #doesnt matter
 NUMBER_OF_AGNET_TRAINED_MODEL = 0
@@ -36,12 +37,19 @@ NUMBER_OF_AGNET_TRAINED_MODEL = 0
 
 
 def run_game():
+    start_time = time.time()
+
+    time_list = [[] for _ in range(NUMBER_OF_AGENT)]
+
     reward_list = [[] for _ in range(NUMBER_OF_AGENT)]
+
+    success_list = []
+
     RL.step = 0
     for i in range(NUMBER_OF_AGENT):
         Boxer_list[i].step = 0
 
-    total_distance_list = [[] for _ in range(NUMBER_OF_AGENT)]
+    total_distance_list = []
 
     for episode in range(1, num_episodes + 1):
         observation = env.reset()
@@ -60,6 +68,7 @@ def run_game():
 
             # env.render()
             
+            elapsed_time = time.time() - start_time
 
             """RL choose action based on observation"""
 
@@ -67,7 +76,8 @@ def run_game():
 
             """Take action and get next observation and reward"""
 
-            observation_, reward, done, _ = env.step(action, RL.Boxer_name)
+            observation_, reward, done, _, success = env.step(action, RL.Boxer_name)
+            #print(success)
 
             for i in range(NUMBER_OF_AGENT):
                 episode_reward_list[i] += reward[RL.Boxer_name[i]]
@@ -93,24 +103,29 @@ def run_game():
                 # if done['Boxer1'] or pusher1.distance_travelled > 60000 or pusher2.distance_travelled >60000 or pusher3.distance_travelled > 60000:
 
                 '''Save total distance and reward every episode'''
-                for i in range(NUMBER_OF_AGENT):
-                    total_distance_list[i].append(pusher_list[i].distance_travelled)
+                
+                total_distance_list.append(episode_steps)
 
                 for i in range(NUMBER_OF_AGENT):
                     reward_list[i].append(episode_reward_list[i])
+
+                    time_list[i].append(elapsed_time)
+
+                success_list.append(success)
+                print(success)
+            
                 break
 
         print("episode is :", episode)
         print("epsilon of Boxer1 is :", Boxer_list[0].epsilon)
+        print("elapsed time is :", elapsed_time)
 
         if episode > 0 and episode % 25 == 0:
             print("Episode {}, average reward of last 25 episode of Boxer1 is {}".format(episode,
                                                                                          np.mean(reward_list[0][-25:])))
             print("epsilon of Boxer1 is :", Boxer_list[0].epsilon)
-        '''
-        if Boxer_list[0].epsilon < 0.005:
-            break
-        '''
+       
+        
         
 
     print('game is all finished, fight on!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
@@ -143,6 +158,21 @@ def run_game():
     if not os.path.exists(output_path_distance):
         os.makedirs(output_path_distance)
 
+    output_path_time = output_path + '/time_output'
+    if not os.path.exists(output_path_time):
+        os.makedirs(output_path_time)
+
+    output_path_success = output_path + '/success_output'
+    if not os.path.exists(output_path_success):
+        os.makedirs(output_path_success)
+
+    with open(os.path.join(output_path_success,
+                           'success' +
+                           str(NUMBER_OF_AGENT).zfill(2) +'.csv'), 'w') as data_dump:
+        wr = csv.writer(data_dump)
+        wr.writerow(success_list)
+        data_dump.close()    
+
     with open(os.path.join(output_path_reward,
                            'reward' +
                            str(NUMBER_OF_AGENT).zfill(2) +'.csv'), 'w') as data_dump:
@@ -156,9 +186,16 @@ def run_game():
                            'distance' +
                            str(NUMBER_OF_AGENT).zfill(2) + '.csv'), 'w') as data_dump:
         wr = csv.writer(data_dump)
+        wr.writerow(total_distance_list)
+        data_dump.close()
+
+    with open(os.path.join(output_path_time,
+                           'time' +
+                           str(NUMBER_OF_AGENT).zfill(2) + '.csv'), 'w') as data_dump:
+        wr = csv.writer(data_dump)
         for i in range(NUMBER_OF_AGENT):
-            # wr.writerow(resized_list_total_distance_mean[i])
-            wr.writerow(total_distance_list[i])
+            # wr.writerow(resized_list_reward_mean[i])
+            wr.writerow(time_list[i])
         data_dump.close()
 
 
@@ -195,14 +232,14 @@ if __name__ == "__main__":
         print(args)
         print('=' * 50)
         NUMBER_OF_AGENT = args.number_agent
-        random_seed = args.random_seed
+        random_seed = random.randint(0, 1000000)
         NUMBER_OF_AGNET_TRAINED_MODEL = args.number_agent_trained_model
         random_seed_trained_model = args.random_seed_trained_model
         np.random.seed(random_seed)
         tf.random.set_seed(random_seed)
     elif input_ == 'pycharm':
-        NUMBER_OF_AGENT = 150 #PROBLEM CODE stops working at 16
-        random_seed = 5
+        NUMBER_OF_AGENT = 15 #PROBLEM CODE stops working at 16
+        random_seed = int(time.time())
         np.random.seed(random_seed)
         tf.random.set_seed(random_seed)
 

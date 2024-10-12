@@ -11,22 +11,14 @@ def plot_distance(file_path):
 
     with open(file_path) as csvfile:
         readCSV = csv.reader(csvfile, delimiter=',')
-        list1 = [row for row in readCSV] 
+        combined_distance = next(readCSV)  # Read the first row
 
-        for i in range(NUMBER_OF_AGENT):
-            if len(list1) > i:  # Ensure there is enough data
-                distance_list[i] = list(map(float, list1[i]))
-            if len(list1) > i + NUMBER_OF_AGENT:  # Ensure there is enough data
-                additional_distance = list(map(float, list1[i + NUMBER_OF_AGENT]))
-                distance_list[i] = [(x + y) / 2 for x, y in zip(distance_list[i], additional_distance)]
+        # Convert the list of strings to a list of integers
+        combined_distance = [int(value) for value in combined_distance]
 
-        combined_distance = np.mean(distance_list, axis=0)
+        print(len(combined_distance))
 
-        window_size = 100  # Adjust the window size for more smoothing
-        window = np.ones(window_size) / window_size
-        smoothed_distance = np.convolve(combined_distance, window, mode='valid')
-
-        plt.plot(smoothed_distance, color='blue', label='Smoothed Average Distance')
+        plt.plot(combined_distance, color='blue', label='Smoothed Average Distance')
 
         plt.legend()
         plt.ylabel('Distance')
@@ -46,5 +38,5 @@ def count_rows_csv(file_path):
         print(f"An error occurred: {e}")
         return None
 
-file_path = './training_output/distance_output/distance150.csv'
+file_path = './training_output/distance_output/distance15.csv'
 plot_distance(file_path)
