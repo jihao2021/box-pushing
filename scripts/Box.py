@@ -10,7 +10,7 @@ from .coordinate_tranformation import local_to_global_transform, global_to_local
 """Define Class Box:"""
 class Box():
     def __init__(self, initial_x, initial_y,  width, height):
-        self.speed_factor = 1/5 #CHANGE AS NEEDED
+        self.speed_factor = 1/2 #CHANGE AS NEEDED
 
         self.width = width
         self.height = height

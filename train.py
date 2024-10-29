@@ -26,7 +26,7 @@ from scripts.DQN_modified_plus_simplified import DeepQNetwork
 from scripts.Boxer import Boxer
 
 # num_episodes = 5000
-num_episodes = 4000 #8000
+num_episodes = 7000 #8000
 max_epLength = 300 #500
 
 NUMBER_OF_AGENT = 10000 #doesnt matter
@@ -259,7 +259,7 @@ if __name__ == "__main__":
                       n_agents_trained_model=NUMBER_OF_AGNET_TRAINED_MODEL,
                       random_seed_trained_model=None,
                       number_episode=num_episodes,
-                      distribution=10
+                      distribution=1000
                       )
 
     Boxer_list = []
