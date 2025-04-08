@@ -1,14 +1,4 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# In[48]:
-
-
 import os
-
-# os.environ["SDL_VIDEODRIVER"] = "dummy"
-import pygame
-from scripts.pygame_env import CustomEnv
 import argparse
 import pygame as pg
 import matplotlib.pyplot as plt
@@ -17,23 +7,18 @@ import tensorflow as tf
 import csv
 import os
 import os.path
-# from mpl_toolkits.mplot3d import Axes3D
-from scripts import constant
 import time
 
+from scripts import utils
+from scripts.pygame_env import CustomEnv
 from scripts.DQN_modified_plus_simplified import DeepQNetwork
 from scripts.Boxer import Boxer
 
-# num_episodes = 5000
-num_episodes = 8000
+num_episodes = 1000
 max_epLength = 500
 
 NUMBER_OF_AGENT = 10
 NUMBER_OF_AGNET_TRAINED_MODEL = 0
-
-
-# In[44]:
-
 
 def run_game():
     reward_list = [[] for _ in range(NUMBER_OF_AGENT)]
@@ -168,8 +153,6 @@ def run_game():
 
 '''End of run_game algorithm'''
 
-# In[50]:
-
 
 if __name__ == "__main__":
     start = time.time()
@@ -182,7 +165,6 @@ if __name__ == "__main__":
 
 
     '''
-    # input = 'pycharm'
     input_ = 'pycharm'
     if input_ == 'shell':
         parser = argparse.ArgumentParser()
@@ -210,7 +192,6 @@ if __name__ == "__main__":
         np.random.seed(random_seed)
         tf.random.set_seed(random_seed)
 
-    # NUMBER_OF_AGENT = 4
     print("number of agent is:", NUMBER_OF_AGENT)
     env = CustomEnv(random_initialization=False, n_agents=NUMBER_OF_AGENT)
 
@@ -258,5 +239,3 @@ if __name__ == "__main__":
     else:
         run_game()
     '''
-
-# In[ ]:

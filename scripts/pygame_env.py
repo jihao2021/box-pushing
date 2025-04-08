@@ -2,21 +2,19 @@ import pygame
 import math
 import numpy as np
 import sys
-from .Box import Box
-from . import constant
-from .target import target
-from .obstacle import obstacle
-from .Box_checker import box_checker
-from .setup_background import set_up_background_new_new, set_up_background_new
 import random
-from .Boxer import Boxer
 import gym
 from gym import spaces
 from gym.utils import seeding
-from .pusher import Pusher
 import time
 
-random.seed(constant.random_seed)
+from .Box import Box
+from . import utils
+from .game_objects import target, obstacle, box_checker
+from .Boxer import Boxer
+from .pusher import Pusher
+
+random.seed(utils.random_seed)
 
 N_DISCRETE_ACTIONS = 6
 
@@ -46,7 +44,7 @@ class CustomEnv(gym.Env):
         pygame.display.set_caption("Box-pushing")
 
         '''Setup game screen, size'''
-        self.size = (constant.framewidth, constant.frameheight)
+        self.size = (utils.framewidth, utils.frameheight)
         self.screen = pygame.display.set_mode(self.size)
 
         """
@@ -92,18 +90,18 @@ class CustomEnv(gym.Env):
         Create static objects such as target, obstacle and patches
         """
         self.object_targets = []
-        target1 = target(constant.target_x, constant.target_y, target_radius=20, color=constant.white)
+        target1 = target(utils.target_x, utils.target_y, target_radius=20, color=utils.white)
         target1.draw_target(self.screen)
         self.object_targets.append(target1)
 
         self.object_obstacles = []
-        obstacle1 = obstacle(constant.obstacle_x, constant.obstacle_y, obstacle_radius=15, color=constant.red)
+        obstacle1 = obstacle(utils.obstacle_x, utils.obstacle_y, obstacle_radius=15, color=utils.red)
         obstacle1.draw_obstacle(self.screen)
         self.object_obstacles.append(obstacle1)
 
         self.object_patches = []
-        patch_list = set_up_background_new_new(constant.framewidth, constant.frameheight)
-        # patch_list = set_up_background_new(constant.framewidth, constant.frameheight)
+        patch_list = utils.setup_background(utils.framewidth, utils.frameheight)
+        # patch_list = set_up_background_new(utils.framewidth, utils.frameheight)
         self.object_patches = patch_list
 
         for patch in patch_list:
@@ -117,7 +115,7 @@ class CustomEnv(gym.Env):
         self.object_boxes = []
         self.object_pushers = []
 
-        self.screen.fill(constant.black)
+        self.screen.fill(utils.black)
 
         self.Pusher_name = []
         for i in range(self.n_agents):
@@ -128,10 +126,10 @@ class CustomEnv(gym.Env):
         '''
 
         if self.random_initialization:
-            box1 = Box(initial_x=random.randint(60, 181), initial_y=random.randint(120, 361), width=constant.box_width,
-                       height=constant.box_height)
+            box1 = Box(initial_x=random.randint(60, 181), initial_y=random.randint(120, 361), width=utils.box_width,
+                       height=utils.box_height)
         else:
-            box1 = Box(initial_x=120, initial_y=240, width=constant.box_width, height=constant.box_height)
+            box1 = Box(initial_x=120, initial_y=240, width=utils.box_width, height=utils.box_height)
 
         # box1.draw_polygon(self.screen)
         box1.draw_closed_lines(self.screen)
@@ -161,32 +159,32 @@ class CustomEnv(gym.Env):
         self.object_box_checkers = []
 
         '''left part of the box checker'''
-        x_offset = -constant.box_width / 2
-        y_offset = constant.box_height / 2
+        x_offset = -utils.box_width / 2
+        y_offset = utils.box_height / 2
         for _ in range(9):
             self.object_box_checkers.append(box_checker(int(x_offset), int(y_offset), self.object_boxes[0]))
-            y_offset -= constant.box_height / 8
-        x_offset = constant.box_width / 2
-        y_offset = constant.box_height / 2
+            y_offset -= utils.box_height / 8
+        x_offset = utils.box_width / 2
+        y_offset = utils.box_height / 2
 
         '''right part of the box checker'''
         for _ in range(9):
             self.object_box_checkers.append(box_checker(int(x_offset), int(y_offset), self.object_boxes[0]))
-            y_offset -= constant.box_height / 8
-        y_offset = constant.box_height / 2
-        x_offset = - constant.box_width / 4
+            y_offset -= utils.box_height / 8
+        y_offset = utils.box_height / 2
+        x_offset = - utils.box_width / 4
 
         '''top part of the box checker'''
         for _ in range(3):
             self.object_box_checkers.append(box_checker(int(x_offset), int(y_offset), self.object_boxes[0]))
-            x_offset += constant.box_width / 4
-        y_offset = - constant.box_height / 2
-        x_offset = - constant.box_width / 4
+            x_offset += utils.box_width / 4
+        y_offset = - utils.box_height / 2
+        x_offset = - utils.box_width / 4
 
         '''bottom part of the box checker'''
         for _ in range(3):
             self.object_box_checkers.append(box_checker(int(x_offset), int(y_offset), self.object_boxes[0]))
-            x_offset += constant.box_width / 4
+            x_offset += utils.box_width / 4
 
     def render(self):
         '''Get box and pushers ready'''
@@ -201,7 +199,7 @@ class CustomEnv(gym.Env):
         # canvas.fill((0, 0, 0))
 
         # This is the line of code that keeps game from not updating
-        # self.screen.fill(constant.black)
+        # self.screen.fill(utils.black)
 
         # box1.draw_polygon(self.screen)
         box1.draw_closed_lines(self.screen)
@@ -214,9 +212,9 @@ class CustomEnv(gym.Env):
         target1.draw_target(self.screen)
         obstacle1.draw_obstacle(self.screen)
 
-        pygame.draw.line(self.screen, constant.black, [440, 240],
+        pygame.draw.line(self.screen, utils.black, [440, 240],
                          [460, 240], 5)
-        pygame.draw.line(self.screen, constant.black, [450, 230],
+        pygame.draw.line(self.screen, utils.black, [450, 230],
                          [450, 250], 5)
 
         for patch in patch_list:
@@ -229,7 +227,7 @@ class CustomEnv(gym.Env):
         # self.screen.blit(self.screen, self.screen.get_rect())
         # pygame.event.pump()
         pygame.display.update()
-        self.clock.tick(constant.FPS)
+        self.clock.tick(utils.FPS)
 
         # test canvas
         # import cv2
@@ -259,7 +257,7 @@ class CustomEnv(gym.Env):
             reward.append(self.w1 * reward_goal + self.w2 * reward_obstacle + self.w3 * reward_rotation + \
                           self.w4 * reward_distance)
 
-        reward_efficiency = constant.reward_efficiency
+        reward_efficiency = utils.reward_efficiency
 
         for i in range(self.n_agents):
             reward[i] += self.w5 * reward_efficiency[i]

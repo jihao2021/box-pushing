@@ -1,10 +1,11 @@
 import pygame as pg
 import math
 import numpy as np
-from . import constant
-from .Boxer import Boxer
-from .coordinate_tranformation import local_to_global_transform, global_to_local_transform
 import random
+
+from . import utils
+from .Boxer import Boxer
+
 random.seed(6)
 
 class Pusher():
@@ -66,40 +67,40 @@ class Pusher():
         '''initialize x_random and y_random and this is the relative coordinate of the pusher to box center'''
 
         if action == 0:
-            x_random = constant.box_width / 2 + self.size / 2
-            y_random = constant.box_height / 4 + random.randint(-10, 10)
+            x_random = utils.box_width / 2 + self.size / 2
+            y_random = utils.box_height / 4 + random.randint(-10, 10)
             self.velocity_vector = x_random * self.heading_vector + \
                                    y_random * self.heading_vector.rotate(90)
 
             self.position_vector = Box1.position_vector + self.velocity_vector
 
         if action == 1:
-            x_random = constant.box_width / 2 + self.size / 2
-            y_random = constant.box_height / 4 + random.randint(-10, 10)
+            x_random = utils.box_width / 2 + self.size / 2
+            y_random = utils.box_height / 4 + random.randint(-10, 10)
             self.velocity_vector= x_random * self.heading_vector - y_random * self.heading_vector.rotate(90)
             self.position_vector = Box1.position_vector + self.velocity_vector
 
         if action == 2:
-            x_random = constant.box_width / 2 + self.size / 2
-            y_random = constant.box_height / 4 + random.randint(-10, 10)
+            x_random = utils.box_width / 2 + self.size / 2
+            y_random = utils.box_height / 4 + random.randint(-10, 10)
             self.velocity_vector = -x_random * self.heading_vector - y_random * self.heading_vector.rotate(90)
             self.position_vector = Box1.position_vector + self.velocity_vector
 
         if action == 3:
-            x_random = constant.box_width / 2 + self.size / 2
-            y_random = constant.box_height / 4 + random.randint(-10, 10)
+            x_random = utils.box_width / 2 + self.size / 2
+            y_random = utils.box_height / 4 + random.randint(-10, 10)
             self.velocity_vector = x_random * self.heading_vector + y_random * self.heading_vector.rotate(90)
             self.position_vector = Box1.position_vector + self.velocity_vector
 
         if action == 4:
             x_random = 0 + random.randint(-10,10)
-            y_random = constant.box_height / 2 + self.size / 2
+            y_random = utils.box_height / 2 + self.size / 2
             self.velocity_vector = x_random * self.heading_vector + y_random * self.heading_vector.rotate(90)
             self.position_vector = Box1.position_vector + self.velocity_vector
 
         if action == 5:
             x_random = 0 + random.randint(-10, 10)
-            y_random = constant.box_height / 2 + self.size / 2
+            y_random = utils.box_height / 2 + self.size / 2
             self.velocity_vector = x_random * self.heading_vector - y_random * self.heading_vector.rotate(90)
             self.position_vector = Box1.position_vector + self.velocity_vector
 
@@ -112,7 +113,7 @@ class Pusher():
 
     def draw_polygon(self, screen):
         self.determine_vertices()
-        pg.draw.polygon(screen, constant.green, ((self.left_top_x, self.left_top_y),
+        pg.draw.polygon(screen, utils.green, ((self.left_top_x, self.left_top_y),
                                                  (self.right_top_x, self.right_top_y),
                                                  (self.right_down_x, self.right_down_y),
                                                  (self.left_down_x, self.left_down_y)))
@@ -121,16 +122,16 @@ class Pusher():
         _, self.current_heading = self.heading_vector.as_polar()
 
 
-        self.left_top_x, self.left_top_y = local_to_global_transform(self.position_vector.x, self.position_vector.y,
+        self.left_top_x, self.left_top_y = utils.local_to_global_transform(self.position_vector.x, self.position_vector.y,
                                                                      self.left_top_change_x, self.left_top_change_y,
                                                                      self.current_heading)
-        self.right_top_x, self.right_top_y = local_to_global_transform(self.position_vector.x, self.position_vector.y,
+        self.right_top_x, self.right_top_y = utils.local_to_global_transform(self.position_vector.x, self.position_vector.y,
                                                                        self.right_top_change_x, self.right_top_change_y,
                                                                        self.current_heading)
-        self.right_down_x, self.right_down_y = local_to_global_transform(self.position_vector.x, self.position_vector.y,
+        self.right_down_x, self.right_down_y = utils.local_to_global_transform(self.position_vector.x, self.position_vector.y,
                                                                          self.right_down_change_x,
                                                                          self.right_down_change_y, self.current_heading)
-        self.left_down_x, self.left_down_y = local_to_global_transform(self.position_vector.x, self.position_vector.y,
+        self.left_down_x, self.left_down_y = utils.local_to_global_transform(self.position_vector.x, self.position_vector.y,
                                                                        self.left_down_change_x, self.left_down_change_y,
                                                                        self.current_heading)
 

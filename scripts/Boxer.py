@@ -1,6 +1,5 @@
 ##Boxer is an abstraction of neural network class for box-pushing agent
 
-#import pygame as pg
 import tensorflow as tf
 import numpy as np
 import os
@@ -8,11 +7,6 @@ from tensorflow import keras
 from keras import layers
 import matplotlib.pyplot as plt
 
-#from tensorflow.contrib.framework.python.framework import checkpoint_utils
-#import constant
-
-#np.random.seed(constant.random_seed)
-#tf.set_random_seed(constant.random_seed)
 
 class MyModel(keras.Model):
     def __init__(self, size=16, num_actions=6):
@@ -325,87 +319,60 @@ class Boxer():
         plt.xlabel('training steps')
         plt.show()
 
-    # def loading_self(self, others_number, others_random_seed):
-    #     #print('Loading Model...')
-    #     #self.saver.restore(self.sess, self.path + '/model-' + str(self.number_episode) + self.name + '.ckpt')
-    #     name = self.name
-    #     print('Loading Model...')
-    #     load_path = "./NUM_AGENT" +str(others_number).zfill(2) +"/" + str(others_random_seed).zfill(4) +'/saved_model'
-    #     self.saver.restore(self.sess, load_path + '/model-' + str(self.number_episode) + self.name + '.ckpt')
+    def loading_self(self, others_number, others_random_seed):
+        #print('Loading Model...')
+        #self.saver.restore(self.sess, self.path + '/model-' + str(self.number_episode) + self.name + '.ckpt')
+        name = self.name
+        print('Loading Model...')
+        load_path = "./NUM_AGENT" +str(others_number).zfill(2) +"/" + str(others_random_seed).zfill(4) +'/saved_model'
+        self.saver.restore(self.sess, load_path + '/model-' + str(self.number_episode) + self.name + '.ckpt')
 
-    # def loading_others_higher(self, others_number, others_random_seed):
-    #     name = self.name
-    #     print('Loading Model...')
-    #     load_path = "./NUM_AGENT" +str(others_number).zfill(2) +"/" + str(others_random_seed).zfill(4) +'/saved_model'
-    #     self.saver.restore(self.sess, load_path + '/model-' + str(self.number_episode) + self.name + '.ckpt')
+    def loading_others_higher(self, others_number, others_random_seed):
+        name = self.name
+        print('Loading Model...')
+        load_path = "./NUM_AGENT" +str(others_number).zfill(2) +"/" + str(others_random_seed).zfill(4) +'/saved_model'
+        self.saver.restore(self.sess, load_path + '/model-' + str(self.number_episode) + self.name + '.ckpt')
 
-    # def loading_others_lower(self, others_number, others_random_seed):
-    #     print('Loading Model...')
-    #     name = self.name
-    #     load_path = "./NUM_AGENT" +str(others_number).zfill(2) +"/" + str(others_random_seed).zfill(4) +'/saved_model'
-    #     Boxer_list_mine = []
-    #     for i in range(self.number_agent):
-    #         Boxer_list_mine.append('Boxer' + str(i+1))
-    #
-    #     Boxer_list_lower = []
-    #     for i in range(others_number):
-    #         Boxer_list_lower.append('Boxer' + str(i+1))
-    #
-    #     Boxer_list_lower = Boxer_list_lower * (int(self.number_agent / others_number) + 1)
-    #     print('resized list before slicing is', len(Boxer_list_lower))
-    #     Boxer_list_lower = Boxer_list_lower[:self.number_agent]
-    #     print('final list after slicing is', len(Boxer_list_lower))
-    #
-    #     ###if i make ### delete, that is most recent delete
-    #
-    #
-    #     for i in range(self.number_agent):
-    #         if name in Boxer_list_mine[i:]:
-    #             save_dict = {}
-    #             for v in tf.all_variables():
-    #                 #print(v.name)
-    #                 if name in v.name:
-    #                     #print(v.name)
-    #
-    #                     ckpt_var_name = v.name.strip(':0')
-    #                     #print(ckpt_var_name)
-    #                     ckpt_var_name = ckpt_var_name.replace(name, Boxer_list_lower[i])
-    #                     # print (name, ckpt_var_name)
-    #                     save_dict[ckpt_var_name] = v
-    #                 #else:
-    #                     #print('else', v.name)
-    #                     #save_dict[v.name.strip(':0')] = v
-    #             # print(tf.all_variables())
-    #             #print(save_dict)
-    #             ###print(save_dict.keys())
-    #
-    #             saver1 = tf.train.Saver(var_list=save_dict)
-    #
-    #             saver1.restore(self.sess, load_path + '/model-' + str(self.number_episode) + Boxer_list_lower[i] + '.ckpt')
-
-
-if __name__ == "__main__":
-    # model = MyModel()
-    batch = np.ones([200, 9*2+3])
-    # result = model(batch)
-    # print(result)
-
-    boxer = Boxer("test",
-                  n_actions=6,
-                  n_features=9,
-                  load_model=False,
-                  path=None,
-                  output_graph=False,
-                  number_agent=False,
-                  random_seed=False,
-                  n_agents_trained_model=False,
-                  random_seed_trained_model=False,
-                  number_episode=1
-                  )
-
-    print("before learning", boxer.eval_net.get_weights()[0])
-    boxer.memory = batch
-    boxer.memory_counter = 200
-    boxer.learn()
-
-    print("after learning", boxer.eval_net.get_weights()[0])
+    def loading_others_lower(self, others_number, others_random_seed):
+        print('Loading Model...')
+        name = self.name
+        load_path = "./NUM_AGENT" +str(others_number).zfill(2) +"/" + str(others_random_seed).zfill(4) +'/saved_model'
+        Boxer_list_mine = []
+        for i in range(self.number_agent):
+            Boxer_list_mine.append('Boxer' + str(i+1))
+    
+        Boxer_list_lower = []
+        for i in range(others_number):
+            Boxer_list_lower.append('Boxer' + str(i+1))
+    
+        Boxer_list_lower = Boxer_list_lower * (int(self.number_agent / others_number) + 1)
+        print('resized list before slicing is', len(Boxer_list_lower))
+        Boxer_list_lower = Boxer_list_lower[:self.number_agent]
+        print('final list after slicing is', len(Boxer_list_lower))
+    
+        ###if i make ### delete, that is most recent delete
+    
+    
+        for i in range(self.number_agent):
+            if name in Boxer_list_mine[i:]:
+                save_dict = {}
+                for v in tf.all_variables():
+                    #print(v.name)
+                    if name in v.name:
+                        #print(v.name)
+    
+                        ckpt_var_name = v.name.strip(':0')
+                        #print(ckpt_var_name)
+                        ckpt_var_name = ckpt_var_name.replace(name, Boxer_list_lower[i])
+                        # print (name, ckpt_var_name)
+                        save_dict[ckpt_var_name] = v
+                    #else:
+                        #print('else', v.name)
+                        #save_dict[v.name.strip(':0')] = v
+                # print(tf.all_variables())
+                #print(save_dict)
+                ###print(save_dict.keys())
+    
+                saver1 = tf.train.Saver(var_list=save_dict)
+    
+                saver1.restore(self.sess, load_path + '/model-' + str(self.number_episode) + Boxer_list_lower[i] + '.ckpt')

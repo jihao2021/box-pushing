@@ -1,8 +1,8 @@
 import math
 import pygame as pg
 import numpy as np
-from . import constant
-from .coordinate_tranformation import local_to_global_transform, global_to_local_transform
+
+from . import utils
 
 #vec = pygame.math.Vector2
 '''For future version update, simplify vector '''
@@ -18,6 +18,7 @@ class Box():
         self.heading_vector = pg.math.Vector2(1,0)
         _, self.current_heading = self.heading_vector.as_polar()
 
+        '''Define the portions of the box on which an agent/pusher can act on.'''
         self.one_hit = 0   ##right-top corner hit
         self.two_hit = 0   ##right-down corner hit
         self.three_hit = 0  ##left-down corner hit
@@ -107,26 +108,26 @@ class Box():
         _, self.current_heading = self.heading_vector.as_polar()
 
 
-        self.left_top_x, self.left_top_y = local_to_global_transform(self.position_vector.x, self.position_vector.y,
+        self.left_top_x, self.left_top_y = utils.local_to_global_transform(self.position_vector.x, self.position_vector.y,
                                                                      self.left_top_change_x, self.left_top_change_y,
                                                                      self.current_heading)
-        self.right_top_x, self.right_top_y = local_to_global_transform(self.position_vector.x, self.position_vector.y,
+        self.right_top_x, self.right_top_y = utils.local_to_global_transform(self.position_vector.x, self.position_vector.y,
                                                                        self.right_top_change_x, self.right_top_change_y,
                                                                        self.current_heading)
-        self.right_down_x, self.right_down_y = local_to_global_transform(self.position_vector.x, self.position_vector.y,
+        self.right_down_x, self.right_down_y = utils.local_to_global_transform(self.position_vector.x, self.position_vector.y,
                                                                          self.right_down_change_x,
                                                                          self.right_down_change_y, self.current_heading)
-        self.left_down_x, self.left_down_y = local_to_global_transform(self.position_vector.x, self.position_vector.y,
+        self.left_down_x, self.left_down_y = utils.local_to_global_transform(self.position_vector.x, self.position_vector.y,
                                                                        self.left_down_change_x, self.left_down_change_y,
                                                                        self.current_heading)
 
     def draw_polygon(self,screen):
         self.determine_vertices()
-        pg.draw.polygon(screen, constant.brown,((self.left_top_x,self.left_top_y),(self.right_top_x,self.right_top_y),
+        pg.draw.polygon(screen, utils.brown,((self.left_top_x,self.left_top_y),(self.right_top_x,self.right_top_y),
                                                 (self.right_down_x, self.right_down_y),(self.left_down_x, self.left_down_y)))
 
     def draw_line(self, screen):
-        pg.draw.line(screen, constant.red, [self.position_vector.x, self.position_vector.y],
+        pg.draw.line(screen, utils.red, [self.position_vector.x, self.position_vector.y],
                      [(self.position_vector.x + self.heading_vector.x * 30),
                       (self.position_vector.y + self.heading_vector.y * 30)], 5)
 
@@ -134,7 +135,7 @@ class Box():
 
     def draw_closed_lines(self,screen):
         self.determine_vertices()
-        pg.draw.polygon(screen, constant.magenta,
+        pg.draw.polygon(screen, utils.magenta,
                         ((self.left_top_x, self.left_top_y), (self.right_top_x, self.right_top_y),
                          (self.right_down_x, self.right_down_y), (self.left_down_x, self.left_down_y)),1)
 
@@ -155,7 +156,7 @@ class Box():
 
 
         if math.hypot(self.position_vector.x - obstacle_x, self.position_vector.y - obstacle_y) < 150:
-            relative_x_obstacle, relative_y_obstacle = global_to_local_transform(self.position_vector.x, self.position_vector.y,
+            relative_x_obstacle, relative_y_obstacle = utils.global_to_local_transform(self.position_vector.x, self.position_vector.y,
                                                                                  obstacle_x, obstacle_y,
                                                                                  self.current_heading)
             angle_obstacle = math.degrees(math.atan2(relative_y_obstacle, relative_x_obstacle))
@@ -200,7 +201,7 @@ class Box():
             patch_y = patch.position_vector.y
             if math.hypot(self.position_vector.x - patch_x, self.position_vector.y - patch_y) < 150:
 
-                relative_x_patch, relative_y_patch = global_to_local_transform(self.position_vector.x,
+                relative_x_patch, relative_y_patch = utils.global_to_local_transform(self.position_vector.x,
                                                                                self.position_vector.y, patch_x,
                                                                               patch_y, self.current_heading)
                 angle_patch = math.degrees(math.atan2(relative_y_patch, relative_x_patch))
@@ -214,7 +215,6 @@ class Box():
                     angle_patch = 0
                 else:
                     print("angle_patch out of angle bound angle_obstacle")
-
 
 
                 assert(0 <= angle_patch < 360), "angle_patch is incorrect"
@@ -239,7 +239,7 @@ class Box():
                     print("Error in Check_state angle_patch")
             else:
                 pass
-        relative_x_goal, relative_y_goal = global_to_local_transform(self.position_vector.x, self.position_vector.y,
+        relative_x_goal, relative_y_goal = utils.global_to_local_transform(self.position_vector.x, self.position_vector.y,
                                                                      target_x, target_y, self.current_heading)
 
         angle_goal = math.degrees(math.atan2(relative_y_goal, relative_x_goal))
@@ -271,7 +271,7 @@ class Box():
         return state_dict
 
     def draw_circle(self,screen):
-        pg.draw.circle(screen,constant.blue, (int(self.position_vector.x), int(self.position_vector.y)), 150,  int(1))
+        pg.draw.circle(screen,utils.blue, (int(self.position_vector.x), int(self.position_vector.y)), 150,  int(1))
 
 
     def check_distance_reward(self, env):
@@ -284,7 +284,7 @@ class Box():
 
         self.current_distance = math.hypot(self.position_vector.x - target1.x, self.position_vector.y - target1.y)
         change_distance = self.previous_distance - self.current_distance
-        reward_distance = change_distance * constant.distance_coefficient
+        reward_distance = change_distance * utils.distance_coefficient
         self.previous_distance = self.current_distance
         return reward_distance
 
@@ -292,17 +292,3 @@ class Box():
         change_angle = self.change_angle
         reward_rotation = math.cos(math.radians(change_angle)) - 0.98
         return reward_rotation
-
-
-
-
-
-
-
-
-
-
-
-
-
-
