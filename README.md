@@ -4,7 +4,7 @@ This repository implements a multi-agent box-pushing simulation based on the JCI
 
 ---
 
-## 🛠️ Installation
+## Installation
 
 To set up the environment, use either `mamba` or `conda`:
 
