@@ -32,11 +32,20 @@ This command starts the training process for the agents in the simulation.
 
 ---
 
+To test the simulation run:
+
+```bash
+python test.py
+```
+
+---
+
 ## 📁 Project Structure
 
 ```
 .
 ├── train.py
+├── test.py
 ├── tf2.yml
 ├── scripts/
 │   ├── utils.py
@@ -74,14 +83,14 @@ This command starts the training process for the agents in the simulation.
 
   - Initializes the entire environment using Pygame, integrating all components (box, pushers, target, obstacles).
 
-- **scripts/boxer.py**
+- **scripts/Pusher_NN.py**
 
-  - Implements the `Boxer` class with the neural network policy for each agent.
+  - Implements the `Pusher_NN` class with the neural network policy for each agent.
   - Selects optimal actions for navigation and collision avoidance.
 
-- **scripts/DQN_modified_plus_simplified.py**
+- **scripts/DQN.py**
   - Modified DQN architecture.
-  - Manages state, action space, model loading/saving, and interaction with the `Boxer` agent.
+  - Manages state, action space, model loading/saving, and interaction with the `Pusher_NN` agent.
 
 ---
 

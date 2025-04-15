@@ -3,7 +3,7 @@ import tensorflow as tf
 import matplotlib.pyplot as plt
 import os
 
-from .Boxer import Boxer
+from .Pusher_NN import Pusher_NN
 from . import utils
 
 
@@ -26,14 +26,14 @@ class DeepQNetwork:
         self.step = 0
         #         self.sess= tf.Session()
 
-        self.Boxer_name = []
+        self.Pusher_NN_name = []
         for i in range(self.n_agents):
-            self.Boxer_name.append("Boxer" + str(i + 1))
+            self.Pusher_NN_name.append("Pusher_NN" + str(i + 1))
 
-        self.Boxer = []
+        self.Pusher_NN = []
         self.pre_train_steps = 2000
         for i in range(self.n_agents):
-            self.Boxer.append(Boxer(self.Boxer_name[i],
+            self.Pusher_NN.append(Pusher_NN(self.Pusher_NN_name[i],
                                     n_actions=n_actions,
                                     n_features=n_features,
                                     load_model=load_model,
@@ -63,17 +63,17 @@ class DeepQNetwork:
             os.makedirs(parent_dir)
         # Save the weights
         for i in range(self.n_agents):
-            self.Boxer[i].eval_net.save_weights(f"models/job{self.n_agents}/model-{self.num_episodes}Boxer{i}-eval.h5")
-            self.Boxer[i].target_net.save_weights(
-                f"models/job{self.n_agents}/model-{self.num_episodes}Boxer{i}-target.h5")
+            self.Pusher_NN[i].eval_net.save_weights(f"models/job{self.n_agents}/model-{self.num_episodes}Pusher_NN{i}-eval.h5")
+            self.Pusher_NN[i].target_net.save_weights(
+                f"models/job{self.n_agents}/model-{self.num_episodes}Pusher_NN{i}-target.h5")
 
     def loading_parameters(self, num_trained, random_seed):
         if num_trained == self.n_agents:  # same number of agents
             print(f"loading exact {num_trained} trained models")
             for i in range(self.n_agents):
-                self.Boxer[i].eval_net.load_weights(f"models/job{self.n_agents}/model-{self.num_episodes}Boxer{i}-eval.h5")
-                self.Boxer[i].target_net.load_weights(
-                    f"models/job{self.n_agents}/model-{self.num_episodes}Boxer{i}-target.h5")
+                self.Pusher_NN[i].eval_net.load_weights(f"models/job{self.n_agents}/model-{self.num_episodes}Pusher_NN{i}-eval.h5")
+                self.Pusher_NN[i].target_net.load_weights(
+                    f"models/job{self.n_agents}/model-{self.num_episodes}Pusher_NN{i}-target.h5")
 
         elif num_trained < self.n_agents:
             np.random.seed(random_seed)
@@ -83,10 +83,10 @@ class DeepQNetwork:
 
             print(f"sampling from {num_trained} trained models to fit team of {self.n_agents}")
             for i, id in enumerate(idx):
-                self.Boxer[i].eval_net.load_weights(
-                    f"models/job{num_trained}/model-{self.num_episodes}Boxer{id}-eval.h5")
-                self.Boxer[i].target_net.load_weights(
-                    f"models/job{num_trained}/model-{self.num_episodes}Boxer{id}-target.h5")
+                self.Pusher_NN[i].eval_net.load_weights(
+                    f"models/job{num_trained}/model-{self.num_episodes}Pusher_NN{id}-eval.h5")
+                self.Pusher_NN[i].target_net.load_weights(
+                    f"models/job{num_trained}/model-{self.num_episodes}Pusher_NN{id}-target.h5")
 
         else:  # if num_trained > self.n_agents
             np.random.seed(random_seed)
@@ -96,19 +96,19 @@ class DeepQNetwork:
 
             print(f"sampling from {num_trained} trained models to fit team of {self.n_agents}")
             for i, id in enumerate(idx):
-                self.Boxer[i].eval_net.load_weights(
-                    f"models/job{num_trained}/model-{self.num_episodes}Boxer{id}-eval.h5")
-                self.Boxer[i].target_net.load_weights(
-                    f"models/job{num_trained}/model-{self.num_episodes}Boxer{id}-target.h5")
+                self.Pusher_NN[i].eval_net.load_weights(
+                    f"models/job{num_trained}/model-{self.num_episodes}Pusher_NN{id}-eval.h5")
+                self.Pusher_NN[i].target_net.load_weights(
+                    f"models/job{num_trained}/model-{self.num_episodes}Pusher_NN{id}-target.h5")
 
     def choose_action(self, observation):
         actions = []
         for i in range(self.n_agents):
-            actions.append(self.Boxer[i].choose_action(observation[self.Boxer_name[i]]))
+            actions.append(self.Pusher_NN[i].choose_action(observation[self.Pusher_NN_name[i]]))
 
         action_list = {}
         for i in range(self.n_agents):
-            action_list.update({self.Boxer_name[i]: actions[i]})
+            action_list.update({self.Pusher_NN_name[i]: actions[i]})
             # print(action_list)
         return action_list
 
@@ -120,22 +120,33 @@ class DeepQNetwork:
         done_list = []
 
         for i in range(self.n_agents):
-            state.append(s[self.Boxer_name[i]])
-            action.append(a[self.Boxer_name[i]])
-            reward.append(r[self.Boxer_name[i]])
-            next_state.append(s_[self.Boxer_name[i]])
-            done_list.append(done[self.Boxer_name[i]])
+            state.append(s[self.Pusher_NN_name[i]])
+            action.append(a[self.Pusher_NN_name[i]])
+            reward.append(r[self.Pusher_NN_name[i]])
+            next_state.append(s_[self.Pusher_NN_name[i]])
+            done_list.append(done[self.Pusher_NN_name[i]])
 
         for i in range(self.n_agents):
-            self.Boxer[i].store_transition(state[i], action[i], reward[i], next_state[i], done_list[i])
+            self.Pusher_NN[i].store_transition(state[i], action[i], reward[i], next_state[i], done_list[i])
 
     def choose_action_greedy(self, observation, epsilon_greedy):
         actions = []
         for i in range(self.n_agents):
-            actions.append(self.Boxer[i].choose_action_greedy(observation[self.Boxer_name[i]], epsilon_greedy))
+            actions.append(self.Pusher_NN[i].choose_action_greedy(observation[self.Pusher_NN_name[i]], epsilon_greedy))
 
         action_list = {}
         for i in range(self.n_agents):
-            action_list.update({self.Boxer_name[i]: actions[i]})
+            action_list.update({self.Pusher_NN_name[i]: actions[i]})
+
+        return action_list
+
+    def chose_action_random(self):
+        actions = []
+        for i in range(self.n_agents):
+            actions.append(self.Pusher_NN[i].choose_action_random())
+
+        action_list = {}
+        for i in range(self.n_agents):
+            action_list.update({self.Pusher_NN_name[i] : actions[i]})
 
         return action_list

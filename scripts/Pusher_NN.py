@@ -1,4 +1,4 @@
-##Boxer is an abstraction of neural network class for box-pushing agent
+##Pusher_NN is an abstraction of neural network class for box-pushing agent
 
 import tensorflow as tf
 import numpy as np
@@ -40,7 +40,7 @@ class MyModel(keras.Model):
         return q_values
 
 
-class Boxer():
+class Pusher_NN():
     def __init__(self,
                  name, 
                  n_actions, 
@@ -101,7 +101,7 @@ class Boxer():
         if self.load_model == True:
             pass
         else:
-            print('Error in initializing parameters in Boxer')
+            print('Error in initializing parameters in Pusher_NN')
             
         self.cost_his = []
 
@@ -119,7 +119,7 @@ class Boxer():
                 self.loading_self(others_number=self.n_agents_trained_model,
                                 others_random_seed=self.random_seed_trained_model)
             else:
-                print('Error in loading model in boxer.py file')
+                print('Error in loading model in Pusher_NN.py file')
             
 
 
@@ -130,7 +130,7 @@ class Boxer():
             elif self.number_agent == self.n_agents_trained_model:
                 self.loading_self()
             else:
-                print('Error in laoding model in boxer.py file')
+                print('Error in laoding model in Pusher_NN.py file')
             '''
 
         self.one_hit = 0  ##right-top corner hit
@@ -248,6 +248,11 @@ class Boxer():
             action = np.argmax(actions_value)
         return action
 
+    def choose_action_random(self):
+        action = np.random.randint(0, self.n_actions)
+        
+        return action
+
     def learn(self):
         if self.learn_step_counter % self.replace_target_iter == 0:
             self.target_net.set_weights(self.eval_net.get_weights())
@@ -337,24 +342,24 @@ class Boxer():
         print('Loading Model...')
         name = self.name
         load_path = "./NUM_AGENT" +str(others_number).zfill(2) +"/" + str(others_random_seed).zfill(4) +'/saved_model'
-        Boxer_list_mine = []
+        Pusher_NN_list_mine = []
         for i in range(self.number_agent):
-            Boxer_list_mine.append('Boxer' + str(i+1))
+            Pusher_NN_list_mine.append('Pusher_NN' + str(i+1))
     
-        Boxer_list_lower = []
+        Pusher_NN_list_lower = []
         for i in range(others_number):
-            Boxer_list_lower.append('Boxer' + str(i+1))
+            Pusher_NN_list_lower.append('Pusher_NN' + str(i+1))
     
-        Boxer_list_lower = Boxer_list_lower * (int(self.number_agent / others_number) + 1)
-        print('resized list before slicing is', len(Boxer_list_lower))
-        Boxer_list_lower = Boxer_list_lower[:self.number_agent]
-        print('final list after slicing is', len(Boxer_list_lower))
+        Pusher_NN_list_lower = Pusher_NN_list_lower * (int(self.number_agent / others_number) + 1)
+        print('resized list before slicing is', len(Pusher_NN_list_lower))
+        Pusher_NN_list_lower = Pusher_NN_list_lower[:self.number_agent]
+        print('final list after slicing is', len(Pusher_NN_list_lower))
     
         ###if i make ### delete, that is most recent delete
     
     
         for i in range(self.number_agent):
-            if name in Boxer_list_mine[i:]:
+            if name in Pusher_NN_list_mine[i:]:
                 save_dict = {}
                 for v in tf.all_variables():
                     #print(v.name)
@@ -363,7 +368,7 @@ class Boxer():
     
                         ckpt_var_name = v.name.strip(':0')
                         #print(ckpt_var_name)
-                        ckpt_var_name = ckpt_var_name.replace(name, Boxer_list_lower[i])
+                        ckpt_var_name = ckpt_var_name.replace(name, Pusher_NN_list_lower[i])
                         # print (name, ckpt_var_name)
                         save_dict[ckpt_var_name] = v
                     #else:
@@ -375,4 +380,4 @@ class Boxer():
     
                 saver1 = tf.train.Saver(var_list=save_dict)
     
-                saver1.restore(self.sess, load_path + '/model-' + str(self.number_episode) + Boxer_list_lower[i] + '.ckpt')
+                saver1.restore(self.sess, load_path + '/model-' + str(self.number_episode) + Pusher_NN_list_lower[i] + '.ckpt')
