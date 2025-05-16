@@ -44,6 +44,7 @@ python test.py
 
 ```
 .
+├── box-pushing-ppo/
 ├── train.py
 ├── test.py
 ├── tf2.yml
@@ -58,6 +59,9 @@ python test.py
 ```
 
 ### Description of Modules
+
+- **box-pushing-ppo/**
+  - Contains Proximal Policy Optimization implementation of box pushing.
 
 - **scripts/utils.py**
 
