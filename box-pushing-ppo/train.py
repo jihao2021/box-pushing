@@ -1,4 +1,4 @@
-ximport os
+import os
 import argparse
 import pygame as pg
 import matplotlib.pyplot as plt
