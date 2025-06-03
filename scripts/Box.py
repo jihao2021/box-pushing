@@ -58,12 +58,12 @@ class Box():
         self.previous_distance = -100
         self.current_distance = None
 
-    def move(self, action, Boxer_name):
-        self.determine_total_hit(action, Boxer_name)
+    def move(self, action, Pusher_NN_name):
+        self.determine_total_hit(action, Pusher_NN_name)
         self.determine_move()
         self.determine_vertices()
 
-    def determine_total_hit(self, action, Boxer_name):
+    def determine_total_hit(self, action, Pusher_NN_name):
         self.one_hit = 0
         self.two_hit = 0
         self.three_hit = 0
@@ -72,7 +72,7 @@ class Box():
         self.six_hit = 0
         actions = []
         for i in range(len(action)):
-            actions.append(action[Boxer_name[i]])
+            actions.append(action[Pusher_NN_name[i]])
 
         for i in range(len(actions)):
             if actions[i] == 0:
@@ -140,7 +140,7 @@ class Box():
                          (self.right_down_x, self.right_down_y), (self.left_down_x, self.left_down_y)),1)
 
 
-    def check_state(self, env, Boxer_name):
+    def check_state(self, env, Pusher_NN_name):
         
         state = np.zeros(env.observation_space.shape[0])
 
@@ -265,8 +265,8 @@ class Box():
         state = np.array(state)
         
         state_dict = {}
-        for i in range(len(Boxer_name)):
-            state_dict.update({Boxer_name[i]: state})
+        for i in range(len(Pusher_NN_name)):
+            state_dict.update({Pusher_NN_name[i]: state})
 
         return state_dict
 

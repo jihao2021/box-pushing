@@ -11,10 +11,10 @@ import time
 
 from scripts import utils
 from scripts.pygame_env import CustomEnv
-from scripts.DQN_modified_plus_simplified import DeepQNetwork
-from scripts.Boxer import Boxer
+from scripts.DQN import DeepQNetwork
+from scripts.Pusher_NN import Pusher_NN
 
-num_episodes = 1000
+num_episodes = 8000
 max_epLength = 500
 
 NUMBER_OF_AGENT = 10
@@ -24,7 +24,7 @@ def run_game():
     reward_list = [[] for _ in range(NUMBER_OF_AGENT)]
     RL.step = 0
     for i in range(NUMBER_OF_AGENT):
-        Boxer_list[i].step = 0
+        Pusher_NN_list[i].step = 0
 
     total_distance_list = [[] for _ in range(NUMBER_OF_AGENT)]
 
@@ -51,16 +51,16 @@ def run_game():
 
             """Take action and get next observation and reward"""
 
-            observation_, reward, done, _ = env.step(action, RL.Boxer_name)
+            observation_, reward, done, _ = env.step(action, RL.Pusher_NN_name)
 
             for i in range(NUMBER_OF_AGENT):
-                episode_reward_list[i] += reward[RL.Boxer_name[i]]
+                episode_reward_list[i] += reward[RL.Pusher_NN_name[i]]
 
             RL.store_transition(observation, action, reward, observation_, done)
 
             for i in range(NUMBER_OF_AGENT):
-                if (Boxer_list[i].step > Boxer_list[i].pre_train_steps) and (Boxer_list[i].step % 5 == 0):
-                    Boxer_list[i].learn()
+                if (Pusher_NN_list[i].step > Pusher_NN_list[i].pre_train_steps) and (Pusher_NN_list[i].step % 5 == 0):
+                    Pusher_NN_list[i].learn()
 
             """Swap observation"""
             observation = observation_
@@ -69,12 +69,12 @@ def run_game():
 
             RL.step += 1
             for i in range(NUMBER_OF_AGENT):
-                Boxer_list[i].step += 1
+                Pusher_NN_list[i].step += 1
 
             """break while loop when end of this episode or when episode is too many"""
-            if done['Boxer1'] or episode_steps > max_epLength:
+            if done['Pusher_NN1'] or episode_steps > max_epLength:
 
-                # if done['Boxer1'] or pusher1.distance_travelled > 60000 or pusher2.distance_travelled >60000 or pusher3.distance_travelled > 60000:
+                # if done['Pusher_NN1'] or pusher1.distance_travelled > 60000 or pusher2.distance_travelled >60000 or pusher3.distance_travelled > 60000:
 
                 '''Save total distance and reward every episode'''
                 for i in range(NUMBER_OF_AGENT):
@@ -85,12 +85,12 @@ def run_game():
                 break
 
         print("episode is :", episode)
-        print("epsilon of Boxer1 is :", Boxer_list[0].epsilon)
+        print("epsilon of Pusher_NN1 is :", Pusher_NN_list[0].epsilon)
 
         if episode > 0 and episode % 25 == 0:
-            print("Episode {}, average reward of last 25 episode of Boxer1 is {}".format(episode,
+            print("Episode {}, average reward of last 25 episode of Pusher_NN1 is {}".format(episode,
                                                                                          np.mean(reward_list[0][-25:])))
-            print("epsilon of Boxer1 is :", Boxer_list[0].epsilon)
+            print("epsilon of Pusher_NN1 is :", Pusher_NN_list[0].epsilon)
 
     print('game is all finished, fight on!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
 
@@ -209,12 +209,12 @@ if __name__ == "__main__":
                       number_episode=num_episodes
                       )
 
-    Boxer_list = []
+    Pusher_NN_list = []
     for i in range(NUMBER_OF_AGENT):
-        Boxer_list.append(RL.Boxer[i])
+        Pusher_NN_list.append(RL.Pusher_NN[i])
 
     print("action: ", RL.choose_action(env.reset()))
-    print("boxer name: ", RL.Boxer_name)
+    print("Pusher_NN name: ", RL.Pusher_NN_name)
 
     run_game()
     end = time.time()

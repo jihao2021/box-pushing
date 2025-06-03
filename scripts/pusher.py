@@ -4,7 +4,7 @@ import numpy as np
 import random
 
 from . import utils
-from .Boxer import Boxer
+from .Pusher_NN import Pusher_NN
 
 random.seed(6)
 
@@ -15,12 +15,7 @@ class Pusher():
         if name == "Pusher1":
             self.initial_x = 40
             self.initial_y = 180
-        if name == "Pusher2":
-            self.initial_x = 60
-            self.initial_y = 200
-        if name == "Pusher2":
-            self.initial_x = 50
-            self.initial_y = 230
+       
         if name == "Pusher2":
             self.initial_x = 60
             self.initial_y = 250

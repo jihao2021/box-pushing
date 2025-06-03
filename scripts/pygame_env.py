@@ -11,7 +11,7 @@ import time
 from .Box import Box
 from . import utils
 from .game_objects import target, obstacle, box_checker
-from .Boxer import Boxer
+from .Pusher_NN import Pusher_NN
 from .pusher import Pusher
 
 random.seed(utils.random_seed)
@@ -31,9 +31,9 @@ class CustomEnv(gym.Env):
         self.random_initialization = random_initialization
         self.n_agents = n_agents
 
-        self.Boxer_name_env = []
+        self.Pusher_NN_name_env = []
         for i in range(self.n_agents):
-            self.Boxer_name_env.append("Boxer" + str(i + 1))
+            self.Pusher_NN_name_env.append("Pusher_NN" + str(i + 1))
 
         high = 1
         self.observation_space = spaces.Box(-high, high, shape=(9,), dtype=np.float32)
@@ -145,7 +145,7 @@ class CustomEnv(gym.Env):
 
         '''Add box sensor box_checker'''
         self.add_box_checker()
-        state = box1.check_state(self, self.Boxer_name_env)
+        state = box1.check_state(self, self.Pusher_NN_name_env)
 
         '''Initialize goal, collision and done state'''
         self.reach_goal = False
@@ -241,7 +241,7 @@ class CustomEnv(gym.Env):
                 pygame.quit()
                 # sys.exit()
 
-    def check_reward_state(self, Boxer_name):
+    def check_reward_state(self, Pusher_NN_name):
         box1 = self.object_boxes[0]
 
         '''Get reward_goal, reward_obstalce and done information'''
@@ -264,11 +264,11 @@ class CustomEnv(gym.Env):
 
         reward_dict = {}
         for i in range(self.n_agents):
-            reward_dict.update({Boxer_name[i]: reward[i]})
+            reward_dict.update({Pusher_NN_name[i]: reward[i]})
 
         done_dict = {}
         for i in range(self.n_agents):
-            done_dict.update({Boxer_name[i]: done})
+            done_dict.update({Pusher_NN_name[i]: done})
         return reward_dict, done_dict
 
     def check_goal_and_collision_reward_new(self):
@@ -319,7 +319,7 @@ class CustomEnv(gym.Env):
             self.done = True
         return reward_goal, reward_obstacle, self.done
 
-    def step(self, action, Boxer_name):
+    def step(self, action, Pusher_NN_name):
         box1 = self.object_boxes[0]
 
         # Can simulate up to 10 agents?
@@ -330,7 +330,7 @@ class CustomEnv(gym.Env):
                     action_pusher = action[key]
             self.object_pushers[i].move(action_pusher, box1)
 
-        box1.move(action, Boxer_name)
+        box1.move(action, Pusher_NN_name)
 
         self.render()
 
@@ -338,8 +338,8 @@ class CustomEnv(gym.Env):
         for box_checker in self.object_box_checkers:
             box_checker.determine_coordinate(box1)
 
-        reward, done = self.check_reward_state(Boxer_name)
-        state = box1.check_state(self, Boxer_name)
+        reward, done = self.check_reward_state(Pusher_NN_name)
+        state = box1.check_state(self, Pusher_NN_name)
 
         '''information splitted up to three different training agents'''
 
@@ -347,5 +347,5 @@ class CustomEnv(gym.Env):
 
         info = {}
         for i in range(self.n_agents):
-            info.update({'Boxer' + str(i + 1): information})
+            info.update({'Pusher_NN' + str(i + 1): information})
         return state, reward, done, info
