@@ -1,0 +1,2 @@
+/project2/haoji_1598/RL/box-pushing-ppo/scripts/Pusher_NN_PPO.py:84: UserWarning: Creating a tensor from a list of numpy.ndarrays is extremely slow. Please consider converting the list to a single numpy.ndarray with numpy.array() before converting to a tensor. (Triggered internally at /home/conda/feedstock_root/build_artifacts/pytorch-recipe_1690826091235/work/torch/csrc/utils/tensor_new.cpp:245.)
+  s = torch.tensor(s, dtype=torch.float32)
