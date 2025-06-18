@@ -1,4 +1,5 @@
 import os
+import sys
 import argparse
 import pygame as pg
 import matplotlib.pyplot as plt
@@ -7,12 +8,16 @@ import torch
 import csv
 import time
 
+# scripts_path = os.path.join(os.path.dirname(__file__), "scripts")
+# if scripts_path not in sys.path:
+#     sys.path.append(scripts_path)
+
 from scripts import utils
 from scripts.pygame_env import CustomEnv
 from scripts.PPO import PPO
 
 # Training parameters
-num_episodes = 8000
+num_episodes = 16000
 max_epLength = 500
 
 # Default agent settings

@@ -4,7 +4,7 @@ import numpy as np
 import random
 
 from . import utils
-from .Pusher_NN import Pusher_NN
+from .Pusher_NN_PPO import Pusher_NN_PPO
 
 random.seed(6)
 
